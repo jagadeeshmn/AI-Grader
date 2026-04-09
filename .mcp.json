@@ -1,0 +1,14 @@
+{
+  "mcpServers": {
+    "stack-auth": {
+      "type": "http",
+      "url": "https://mcp.stack-auth.com/"
+    },
+    "aigrader-analytics": {
+      "type": "stdio",
+      "command": "npm",
+      "args": ["run", "mcp"],
+      "cwd": "/Users/nagajagadeeshmutala/Documents/Job_applications/Projects/aigrader"
+    }
+  }
+}

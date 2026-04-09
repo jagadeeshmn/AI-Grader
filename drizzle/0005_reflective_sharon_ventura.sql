@@ -1,0 +1,1 @@
+ALTER TABLE "grades" ADD COLUMN "source" text DEFAULT 'ai' NOT NULL;

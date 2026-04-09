@@ -1,36 +1,134 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# AI Grader
 
-## Getting Started
+An intelligent, role-based course management and assignment grading platform built with Next.js 16, powered by Claude for automated evaluation, retrieval-augmented grading, and course analytics.
 
-First, run the development server:
+---
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+## Overview
+
+AI Grader manages the complete lifecycle of academic courses — from enrollment and assignment creation to AI-powered grading grounded in course reference material. It supports three distinct user roles (Admin, Instructor, Student), each with a tailored experience.
+
+Grading is not a blind LLM call: instructors upload reference material per course, which is chunked, embedded, and stored in pgvector. At grading time, the platform retrieves the most relevant chunks for each rubric criterion and injects them into the prompt, so Claude grades against the instructor's own source of truth.
+
+The platform also ships with a Model Context Protocol (MCP) server that exposes live course analytics as typed tools, letting an admin query the application from Claude Desktop in natural language without writing any code.
+
+---
+
+## Features
+
+### Role-Based Access Control
+
+Three user roles enforced at both the UI and server-action level:
+
+| Capability | Admin | Instructor | Student |
+|---|---|---|---|
+| Create / manage courses | ✅ | ❌ | ❌ |
+| Assign instructors to courses | ✅ | ❌ | ❌ |
+| Enroll / unenroll students | ✅ | ❌ | ❌ |
+| Upload course reference material | ✅ | ✅ (own courses) | ❌ |
+| Create / edit assignments | ❌ | ✅ (own courses) | ❌ |
+| Define rubrics | ❌ | ✅ | ❌ |
+| Trigger AI grading | ❌ | ✅ | ❌ |
+| Submit assignments | ❌ | ❌ | ✅ |
+| View own courses & grades | ❌ | ❌ | ✅ |
+| Query app data via MCP | ✅ | ❌ | ❌ |
+
+### Admin
+
+- **Course management** — Create courses with a name and batch (e.g. `2025-Spring`).
+- **Instructor assignment** — Assign or reassign an instructor to any course.
+- **Student enrollment** — Enroll or unenroll students through a dedicated management UI.
+- **AI analytics via MCP** — Connect Claude Desktop to the platform's MCP server and ask natural-language questions against live data:
+  - *"Which courses have the lowest submission rates?"*
+  - *"Show the grade distribution for the Networks midterm."*
+  - *"List all students who haven't submitted Assignment 3."*
+
+### Instructor
+
+- **Assignment authoring** — Create and edit assignments with a live split-pane markdown editor, supporting rich text, code blocks, tables, and image attachments.
+- **Rubric definition** — Attach a structured rubric to each assignment specifying criterion, description, and max points per criterion.
+- **Course reference material** — Upload long-form reference content (lecture notes, textbook excerpts, standards documents). The platform automatically chunks the text (~2,500 chars with overlap), generates embeddings, and stores them for retrieval at grading time.
+- **Submission deadline** — Set a deadline per assignment; submissions close automatically once the deadline passes.
+- **RAG-grounded AI grading** — For each rubric criterion, the platform retrieves the top relevant chunks from the course's reference material via cosine similarity, injects them into the grading prompt, and calls Claude with forced tool use to return structured per-criterion scores and feedback. Falls back gracefully when no materials exist.
+
+### Student
+
+- **Course dashboard** — View enrolled courses and their assignments, organized with tabs.
+- **Assignment submission** — Submit markdown work before the deadline.
+- **Grades & feedback** — See total score, per-criterion breakdown, and AI-generated feedback after grading.
+
+### Retrieval-Augmented Grading Pipeline
+
+A custom, lightweight RAG pipeline built directly on pgvector — no LangChain, no external vector DB:
+
+```
+Instructor uploads reference material
+         │
+         ▼
+  Sentence-boundary chunker (~2,500 chars, 200 char overlap)
+         │
+         ▼
+  Voyage AI embeddings (voyage-2, 1024 dims, batched)
+         │
+         ▼
+  pgvector table with HNSW index (vector_cosine_ops)
+
+─────────────────────────────────────────────────────
+
+Instructor clicks "Evaluate"
+         │
+         ▼
+  For each rubric criterion:
+    query = criterion + description
+    retrieve top 5 chunks (cosine distance, scoped by courseId via JOIN)
+         │
+         ▼
+  Prompt = system + rubric + assignment + submission + retrieved chunks
+         │
+         ▼
+  Claude (forced tool use) → { scores[], totalMarks, feedback }
+         │
+         ▼
+  Written to evaluations table
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### MCP Analytics Server
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+A built-in Model Context Protocol server exposes the database as typed tools any MCP-compatible client can call:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Tool | Description |
+|---|---|
+| `list_courses` | List all courses with enrollment + instructor |
+| `get_course_summary` | Enrollment, assignment count, submission rate, avg grade |
+| `get_submission_stats` | Per-assignment submission and grade stats |
+| `get_grade_distribution` | Grade bands, avg/min/max for an assignment |
+| `get_students_without_submissions` | Students who missed an assignment |
+| `get_ungraded_submissions` | Submissions pending grading |
 
-## Learn More
+Runs over stdio transport — drop it into `claude_desktop_config.json` and query the platform in natural language.
 
-To learn more about Next.js, take a look at the following resources:
+### Developer Experience
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Claude Code integration** — `CLAUDE.md` captures project conventions, commands, and post-edit checks.
+- **Automated hooks** — `.claude/settings.json` runs `lint`, `format`, and `typecheck` after every file edit.
+- **Full type safety** — Drizzle schema as the single source of truth; `tsc --noEmit` clean across the project.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+---
 
-## Deploy on Vercel
+## Tech Stack
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 16 (App Router, RSC, Server Actions, Turbopack) |
+| Language | TypeScript 5 |
+| Authentication | Stack Auth (`@stackframe/stack`) |
+| Database | Neon — serverless PostgreSQL |
+| ORM | Drizzle ORM + Drizzle Kit (migrations) |
+| Vector Store | pgvector (HNSW, `vector_cosine_ops`) — colocated in Neon |
+| Embeddings | Voyage AI (`voyage-2`, 1024 dimensions) |
+| LLM | Anthropic Claude (`@anthropic-ai/sdk`) with forced tool use |
+| MCP | `@modelcontextprotocol/sdk` — stdio transport |
+| Styling | Tailwind CSS 4 + shadcn/ui (Radix UI primitives) |
+| Markdown | `@uiw/react-md-editor` (editing) + `react-markdown` (rendering) |
+| Icons | Lucide React |
+| Lint / Format | Biome |

@@ -1,0 +1,16 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "cd /Users/nagajagadeeshmutala/Documents/Job_applications/Projects/aigrader && npm run lint && npm run format && npm run typecheck 2>&1 || true",
+            "statusMessage": "Running lint, format, typecheck..."
+          }
+        ]
+      }
+    ]
+  }
+}

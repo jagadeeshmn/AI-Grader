@@ -3,24 +3,39 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
-    "build": "next build",
+    "typecheck": "tsc --noEmit",
+    "dev": "next dev --turbopack",
+    "build": "next build --turbopack",
     "start": "next start",
     "lint": "biome check",
     "format": "biome format --write",
-    "typecheck": "tsc --noEmit"
+    "db:seed": "tsx src/db/seed.ts",
+    "db:seed:networks": "tsx src/db/seed-networks.ts",
+    "db:seed:submission": "tsx src/db/seed-submission.ts",
+    "db:seed:materials": "tsx src/db/seed-materials.ts",
+    "db:generate": "drizzle-kit generate",
+    "db:migrate": "tsx src/db/migrate.ts",
+    "mcp": "tsx -r dotenv/config src/mcp/server.ts"
   },
   "dependencies": {
+    "@anthropic-ai/sdk": "^0.82.0",
+    "@modelcontextprotocol/sdk": "^1.29.0",
+    "@neondatabase/serverless": "^1.0.2",
+    "@radix-ui/react-navigation-menu": "^1.2.14",
+    "@radix-ui/react-slot": "^1.2.3",
+    "@stackframe/stack": "^2.8.80",
+    "@uiw/react-md-editor": "^4.0.8",
     "class-variance-authority": "^0.7.1",
     "clsx": "^2.1.1",
-    "lucide-react": "^1.7.0",
-    "next": "16.2.2",
+    "dotenv": "^17.3.1",
+    "drizzle-orm": "^0.45.2",
+    "lucide-react": "^0.544.0",
+    "next": "^16.0.1",
     "radix-ui": "^1.4.3",
-    "react": "19.2.4",
-    "react-dom": "19.2.4",
-    "shadcn": "^4.1.2",
-    "tailwind-merge": "^3.5.0",
-    "tw-animate-css": "^1.4.0"
+    "react": "^19.2.0",
+    "react-dom": "^19.2.0",
+    "react-markdown": "^10.1.0",
+    "tailwind-merge": "^3.3.1"
   },
   "devDependencies": {
     "@biomejs/biome": "2.2.0",
@@ -28,7 +43,11 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
+    "drizzle-kit": "^0.31.10",
+    "drizzle-seed": "^0.3.1",
     "tailwindcss": "^4",
+    "tsx": "^4.21.0",
+    "tw-animate-css": "^1.3.8",
     "typescript": "^5"
   }
 }
