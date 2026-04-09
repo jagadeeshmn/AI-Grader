@@ -18,20 +18,7 @@ The platform also ships with a Model Context Protocol (MCP) server that exposes 
 
 ### Role-Based Access Control
 
-Three user roles enforced at both the UI and server-action level:
-
-| Capability | Admin | Instructor | Student |
-|---|---|---|---|
-| Create / manage courses | ✅ | ❌ | ❌ |
-| Assign instructors to courses | ✅ | ❌ | ❌ |
-| Enroll / unenroll students | ✅ | ❌ | ❌ |
-| Upload course reference material | ✅ | ✅ (own courses) | ❌ |
-| Create / edit assignments | ❌ | ✅ (own courses) | ❌ |
-| Define rubrics | ❌ | ✅ | ❌ |
-| Trigger AI grading | ❌ | ✅ | ❌ |
-| Submit assignments | ❌ | ❌ | ✅ |
-| View own courses & grades | ❌ | ❌ | ✅ |
-| Query app data via MCP | ✅ | ❌ | ❌ |
+Three user roles enforced at both the UI and server-action level.
 
 ### Admin
 
@@ -59,38 +46,7 @@ Three user roles enforced at both the UI and server-action level:
 
 ### Retrieval-Augmented Grading Pipeline
 
-A custom, lightweight RAG pipeline built directly on pgvector — no LangChain, no external vector DB:
-
-```
-Instructor uploads reference material
-         │
-         ▼
-  Sentence-boundary chunker (~2,500 chars, 200 char overlap)
-         │
-         ▼
-  Voyage AI embeddings (voyage-2, 1024 dims, batched)
-         │
-         ▼
-  pgvector table with HNSW index (vector_cosine_ops)
-
-─────────────────────────────────────────────────────
-
-Instructor clicks "Evaluate"
-         │
-         ▼
-  For each rubric criterion:
-    query = criterion + description
-    retrieve top 5 chunks (cosine distance, scoped by courseId via JOIN)
-         │
-         ▼
-  Prompt = system + rubric + assignment + submission + retrieved chunks
-         │
-         ▼
-  Claude (forced tool use) → { scores[], totalMarks, feedback }
-         │
-         ▼
-  Written to evaluations table
-```
+A custom, lightweight RAG pipeline built directly on pgvector — no LangChain, no external vector DB
 
 ### MCP Analytics Server
 
@@ -104,14 +60,6 @@ A built-in Model Context Protocol server exposes the database as typed tools any
 | `get_grade_distribution` | Grade bands, avg/min/max for an assignment |
 | `get_students_without_submissions` | Students who missed an assignment |
 | `get_ungraded_submissions` | Submissions pending grading |
-
-Runs over stdio transport — drop it into `claude_desktop_config.json` and query the platform in natural language.
-
-### Developer Experience
-
-- **Claude Code integration** — `CLAUDE.md` captures project conventions, commands, and post-edit checks.
-- **Automated hooks** — `.claude/settings.json` runs `lint`, `format`, and `typecheck` after every file edit.
-- **Full type safety** — Drizzle schema as the single source of truth; `tsc --noEmit` clean across the project.
 
 ---
 
