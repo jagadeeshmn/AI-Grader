@@ -34,12 +34,13 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   if (role === "student") {
     // Students must be enrolled in the course to view it
-    const [enrolled, course, courseAssignments, enrolledStudents] = await Promise.all([
-      isStudentEnrolled(Number(id), user.id),
-      getCourseById(Number(id)),
-      getCourseAssignments(Number(id)),
-      getCourseStudents(Number(id)),
-    ]);
+    const [enrolled, course, courseAssignments, enrolledStudents] =
+      await Promise.all([
+        isStudentEnrolled(Number(id), user.id),
+        getCourseById(Number(id)),
+        getCourseAssignments(Number(id)),
+        getCourseStudents(Number(id)),
+      ]);
 
     if (!enrolled || !course) notFound();
 
@@ -54,13 +55,14 @@ export default async function CoursePage({ params }: CoursePageProps) {
 
   if (role === "instructor") {
     // Instructors can only view courses they are assigned to
-    const [assigned, course, courseAssignments, enrolledStudents, materials] = await Promise.all([
-      isInstructorAssigned(Number(id), user.id),
-      getCourseById(Number(id)),
-      getCourseAssignments(Number(id)),
-      getCourseStudents(Number(id)),
-      getCourseMaterials(Number(id)),
-    ]);
+    const [assigned, course, courseAssignments, enrolledStudents, materials] =
+      await Promise.all([
+        isInstructorAssigned(Number(id), user.id),
+        getCourseById(Number(id)),
+        getCourseAssignments(Number(id)),
+        getCourseStudents(Number(id)),
+        getCourseMaterials(Number(id)),
+      ]);
 
     if (!assigned || !course) notFound();
 
@@ -75,15 +77,21 @@ export default async function CoursePage({ params }: CoursePageProps) {
   }
 
   // Admin: full management view
-  const [course, enrolledStudents, allStudents, allInstructors, courseAssignments, materials] =
-    await Promise.all([
-      getCourseById(Number(id)),
-      getCourseStudents(Number(id)),
-      getAllStudents(),
-      getAllInstructors(),
-      getCourseAssignments(Number(id)),
-      getCourseMaterials(Number(id)),
-    ]);
+  const [
+    course,
+    enrolledStudents,
+    allStudents,
+    allInstructors,
+    courseAssignments,
+    materials,
+  ] = await Promise.all([
+    getCourseById(Number(id)),
+    getCourseStudents(Number(id)),
+    getAllStudents(),
+    getAllInstructors(),
+    getCourseAssignments(Number(id)),
+    getCourseMaterials(Number(id)),
+  ]);
 
   if (!course) notFound();
 

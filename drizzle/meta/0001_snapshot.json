@@ -78,12 +78,8 @@
           "name": "assignments_course_id_courses_id_fk",
           "tableFrom": "assignments",
           "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -91,12 +87,8 @@
           "name": "assignments_author_id_usersSync_id_fk",
           "tableFrom": "assignments",
           "tableTo": "usersSync",
-          "columnsFrom": [
-            "author_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["author_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }
@@ -106,9 +98,7 @@
         "assignments_slug_unique": {
           "name": "assignments_slug_unique",
           "nullsNotDistinct": false,
-          "columns": [
-            "slug"
-          ]
+          "columns": ["slug"]
         }
       },
       "policies": {},
@@ -145,12 +135,8 @@
           "name": "course_students_course_id_courses_id_fk",
           "tableFrom": "course_students",
           "tableTo": "courses",
-          "columnsFrom": [
-            "course_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["course_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         },
@@ -158,12 +144,8 @@
           "name": "course_students_student_id_usersSync_id_fk",
           "tableFrom": "course_students",
           "tableTo": "usersSync",
-          "columnsFrom": [
-            "student_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["student_id"],
+          "columnsTo": ["id"],
           "onDelete": "cascade",
           "onUpdate": "no action"
         }
@@ -171,10 +153,7 @@
       "compositePrimaryKeys": {
         "course_students_course_id_student_id_pk": {
           "name": "course_students_course_id_student_id_pk",
-          "columns": [
-            "course_id",
-            "student_id"
-          ]
+          "columns": ["course_id", "student_id"]
         }
       },
       "uniqueConstraints": {},
@@ -231,12 +210,8 @@
           "name": "courses_instructor_id_usersSync_id_fk",
           "tableFrom": "courses",
           "tableTo": "usersSync",
-          "columnsFrom": [
-            "instructor_id"
-          ],
-          "columnsTo": [
-            "id"
-          ],
+          "columnsFrom": ["instructor_id"],
+          "columnsTo": ["id"],
           "onDelete": "no action",
           "onUpdate": "no action"
         }

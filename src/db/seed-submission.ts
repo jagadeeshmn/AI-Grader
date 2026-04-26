@@ -6,7 +6,13 @@
  * Safe to re-run — upserts on conflict.
  */
 import db from "@/db/index";
-import { assignments, courses, courseStudents, submissions, usersSync } from "@/db/schema";
+import {
+  assignments,
+  courses,
+  courseStudents,
+  submissions,
+  usersSync,
+} from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
 const COURSE_NAME = "Networks";
@@ -96,23 +102,37 @@ async function main() {
       .where(eq(courses.name, COURSE_NAME))
       .limit(1);
 
-    if (!course) throw new Error(`Course "${COURSE_NAME}" not found. Run course seed first.`);
+    if (!course)
+      throw new Error(
+        `Course "${COURSE_NAME}" not found. Run course seed first.`,
+      );
 
     // 2. Resolve the assignment
     const [assignment] = await db
       .select({ id: assignments.id })
       .from(assignments)
-      .where(and(eq(assignments.courseId, course.id), eq(assignments.title, ASSIGNMENT_TITLE)))
+      .where(
+        and(
+          eq(assignments.courseId, course.id),
+          eq(assignments.title, ASSIGNMENT_TITLE),
+        ),
+      )
       .limit(1);
 
-    if (!assignment) throw new Error(`Assignment "${ASSIGNMENT_TITLE}" not found.`);
+    if (!assignment)
+      throw new Error(`Assignment "${ASSIGNMENT_TITLE}" not found.`);
 
     console.log(`📚 Assignment ID: ${assignment.id}`);
 
     // 3. Ensure the seed student exists in usersSync
     await db
       .insert(usersSync)
-      .values({ id: STUDENT_ID, name: STUDENT_NAME, email: STUDENT_EMAIL, role: "student" })
+      .values({
+        id: STUDENT_ID,
+        name: STUDENT_NAME,
+        email: STUDENT_EMAIL,
+        role: "student",
+      })
       .onConflictDoUpdate({
         target: usersSync.id,
         set: { name: STUDENT_NAME, email: STUDENT_EMAIL },
@@ -138,10 +158,15 @@ async function main() {
       })
       .onConflictDoUpdate({
         target: [submissions.assignmentId, submissions.studentId],
-        set: { content: SUBMISSION_CONTENT, submittedAt: new Date().toISOString() },
+        set: {
+          content: SUBMISSION_CONTENT,
+          submittedAt: new Date().toISOString(),
+        },
       });
 
-    console.log(`\n✅ Submission seeded for "${ASSIGNMENT_TITLE}" by ${STUDENT_NAME}.`);
+    console.log(
+      `\n✅ Submission seeded for "${ASSIGNMENT_TITLE}" by ${STUDENT_NAME}.`,
+    );
   } catch (err) {
     console.error("💥 Seed failed:", err);
     process.exit(1);

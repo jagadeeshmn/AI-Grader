@@ -285,7 +285,9 @@ async function main() {
       .limit(1);
 
     if (!course) {
-      throw new Error(`Course "${COURSE_NAME}" not found. Run course seed first.`);
+      throw new Error(
+        `Course "${COURSE_NAME}" not found. Run course seed first.`,
+      );
     }
 
     // Resolve instructor
@@ -303,9 +305,7 @@ async function main() {
 
     // Clear existing assignments for this course only
     console.log(`🧹 Clearing existing assignments for course ${course.id}...`);
-    await db
-      .delete(assignments)
-      .where(eq(assignments.courseId, course.id));
+    await db.delete(assignments).where(eq(assignments.courseId, course.id));
 
     // Insert
     for (const data of ASSIGNMENTS) {
@@ -329,10 +329,12 @@ async function main() {
 
     // Sync sequence
     await sql.query(
-      `SELECT setval(pg_get_serial_sequence('assignments','id'), COALESCE((SELECT MAX(id) FROM assignments), 1), true);`
+      `SELECT setval(pg_get_serial_sequence('assignments','id'), COALESCE((SELECT MAX(id) FROM assignments), 1), true);`,
     );
 
-    console.log(`\n✅ Seeded ${ASSIGNMENTS.length} assignments for "${COURSE_NAME}".`);
+    console.log(
+      `\n✅ Seeded ${ASSIGNMENTS.length} assignments for "${COURSE_NAME}".`,
+    );
   } catch (err) {
     console.error("💥 Seed failed:", err);
     process.exit(1);

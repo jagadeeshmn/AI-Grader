@@ -1,7 +1,13 @@
 "use client";
 
 import { useState } from "react";
-import { ChevronDown, ChevronRight, FileText, Plus, Trash2 } from "lucide-react";
+import {
+  ChevronDown,
+  ChevronRight,
+  FileText,
+  Plus,
+  Trash2,
+} from "lucide-react";
 import {
   addCourseMaterialAction,
   deleteCourseMaterialAction,
@@ -54,10 +60,7 @@ export function CourseMaterials({ courseId, materials }: CourseMaterialsProps) {
             {materials.map((material) => {
               const isExpanded = expandedId === material.id;
               return (
-                <div
-                  key={material.id}
-                  className="py-3 first:pt-0 last:pb-0"
-                >
+                <div key={material.id} className="py-3 first:pt-0 last:pb-0">
                   <div className="flex items-center justify-between">
                     <button
                       type="button"
@@ -80,7 +83,7 @@ export function CourseMaterials({ courseId, materials }: CourseMaterialsProps) {
                         <p className="text-xs text-muted-foreground">
                           {new Date(material.createdAt).toLocaleDateString(
                             "en-US",
-                            { day: "numeric", month: "short", year: "numeric" }
+                            { day: "numeric", month: "short", year: "numeric" },
                           )}
                         </p>
                       </div>

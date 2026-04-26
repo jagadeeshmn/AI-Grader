@@ -5,9 +5,13 @@ import { stackServerApp } from "@/stack/server";
 import { and, eq } from "drizzle-orm";
 import { authorizeUserToEditArticle } from "@/db/authz";
 import db from "@/db/index";
-import { assignments, courses, usersSync, type RubricCriterion } from "@/db/schema";
+import {
+  assignments,
+  courses,
+  usersSync,
+  type RubricCriterion,
+} from "@/db/schema";
 import { ensureUserExists } from "@/db/sync-user";
-
 
 export type CreateAssignmentInput = {
   title: string;
@@ -42,7 +46,10 @@ export async function createAssignment(data: CreateAssignmentInput) {
   return { success: true, message: "Assignment create logged" };
 }
 
-export async function updateAssignment(id: string, data: UpdateAssignmentInput) {
+export async function updateAssignment(
+  id: string,
+  data: UpdateAssignmentInput,
+) {
   const user = await stackServerApp.getUser();
   if (!user) {
     throw new Error("❌ Unauthorized");
@@ -82,7 +89,7 @@ export async function deleteAssignment(id: string) {
 
 export async function updateAssignmentRubric(
   assignmentId: number,
-  rubric: RubricCriterion[]
+  rubric: RubricCriterion[],
 ): Promise<void> {
   const user = await stackServerApp.getUser();
   if (!user) throw new Error("❌ Unauthorized");
@@ -99,7 +106,10 @@ export async function updateAssignmentRubric(
 
   if (dbUser.role === "instructor") {
     const [assignment] = await db
-      .select({ courseId: assignments.courseId, authorId: assignments.authorId })
+      .select({
+        courseId: assignments.courseId,
+        authorId: assignments.authorId,
+      })
       .from(assignments)
       .where(eq(assignments.id, assignmentId))
       .limit(1);
@@ -111,7 +121,12 @@ export async function updateAssignmentRubric(
       const [course] = await db
         .select({ id: courses.id })
         .from(courses)
-        .where(and(eq(courses.id, assignment.courseId), eq(courses.instructorId, user.id)))
+        .where(
+          and(
+            eq(courses.id, assignment.courseId),
+            eq(courses.instructorId, user.id),
+          ),
+        )
         .limit(1);
       if (!course) throw new Error("❌ Forbidden");
     }

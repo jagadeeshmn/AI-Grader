@@ -52,7 +52,10 @@ export async function getAssignmentSubmissions(assignmentId: number) {
     .orderBy(submissions.submittedAt);
 }
 
-export async function getSubmissionByStudent(assignmentId: number, studentId: string) {
+export async function getSubmissionByStudent(
+  assignmentId: number,
+  studentId: string,
+) {
   const [row] = await db
     .select({
       id: submissions.id,
@@ -63,8 +66,8 @@ export async function getSubmissionByStudent(assignmentId: number, studentId: st
     .where(
       and(
         eq(submissions.assignmentId, assignmentId),
-        eq(submissions.studentId, studentId)
-      )
+        eq(submissions.studentId, studentId),
+      ),
     )
     .limit(1);
   return row ?? null;

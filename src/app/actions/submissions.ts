@@ -16,7 +16,8 @@ export async function submitAssignmentForm(formData: FormData): Promise<void> {
     .where(eq(usersSync.id, user.id))
     .limit(1);
 
-  if (dbUser?.role !== "student") throw new Error("❌ Forbidden: students only");
+  if (dbUser?.role !== "student")
+    throw new Error("❌ Forbidden: students only");
 
   const assignmentId = Number(formData.get("assignmentId"));
   const content = String(formData.get("content")).trim();

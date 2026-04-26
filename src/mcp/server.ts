@@ -16,7 +16,7 @@ import {
 
 const server = new Server(
   { name: "aigrader-analytics", version: "1.0.0" },
-  { capabilities: { tools: {} } }
+  { capabilities: { tools: {} } },
 );
 
 // ── Tool definitions ──────────────────────────────────────────────────────────
@@ -59,7 +59,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: "object",
         properties: {
-          assignmentId: { type: "number", description: "The ID of the assignment" },
+          assignmentId: {
+            type: "number",
+            description: "The ID of the assignment",
+          },
         },
         required: ["assignmentId"],
       },
@@ -71,7 +74,10 @@ server.setRequestHandler(ListToolsRequestSchema, async () => ({
       inputSchema: {
         type: "object",
         properties: {
-          assignmentId: { type: "number", description: "The ID of the assignment" },
+          assignmentId: {
+            type: "number",
+            description: "The ID of the assignment",
+          },
         },
         required: ["assignmentId"],
       },
@@ -111,7 +117,11 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const { courseId } = args as { courseId: number };
         const data = await getCourseSummary(courseId);
         if (!data) {
-          return { content: [{ type: "text", text: `No course found with ID ${courseId}` }] };
+          return {
+            content: [
+              { type: "text", text: `No course found with ID ${courseId}` },
+            ],
+          };
         }
         return {
           content: [{ type: "text", text: JSON.stringify(data, null, 2) }],
@@ -131,7 +141,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const data = await getGradeDistribution(assignmentId);
         if (!data) {
           return {
-            content: [{ type: "text", text: `No assignment found with ID ${assignmentId}` }],
+            content: [
+              {
+                type: "text",
+                text: `No assignment found with ID ${assignmentId}`,
+              },
+            ],
           };
         }
         return {
@@ -144,7 +159,12 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
         const data = await getStudentsWithoutSubmissions(assignmentId);
         if (!data) {
           return {
-            content: [{ type: "text", text: `No assignment found with ID ${assignmentId}` }],
+            content: [
+              {
+                type: "text",
+                text: `No assignment found with ID ${assignmentId}`,
+              },
+            ],
           };
         }
         return {

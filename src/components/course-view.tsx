@@ -96,11 +96,15 @@ export function CourseView({
       </nav>
 
       {/* Course hero */}
-      <div className="rounded-xl border bg-card px-6 py-5 flex flex-col gap-3">
+      <div className="rounded-xl bg-gradient-to-r from-indigo-600 to-violet-600 px-6 py-6 flex flex-col gap-3 shadow-sm">
         <div className="flex flex-col gap-1">
-          <h1 className="text-2xl font-bold tracking-tight">{course.name}</h1>
-          <div className="flex items-center gap-3 text-sm text-muted-foreground">
-            <Badge variant="outline">{course.batch}</Badge>
+          <h1 className="text-2xl font-bold tracking-tight text-white">
+            {course.name}
+          </h1>
+          <div className="flex items-center gap-3 text-sm text-indigo-100">
+            <Badge className="bg-white/20 text-white border border-white/30">
+              {course.batch}
+            </Badge>
             <span className="flex items-center gap-1">
               <Users className="h-3.5 w-3.5" />
               {enrolledCount} student{enrolledCount !== 1 ? "s" : ""}
@@ -162,7 +166,7 @@ export function CourseView({
                   {courseAssignments.map((assignment) => {
                     const totalMarks = assignment.rubric.reduce(
                       (sum, c) => sum + c.maxPoints,
-                      0
+                      0,
                     );
                     const overdue = isOverdue(assignment.deadline);
                     return (

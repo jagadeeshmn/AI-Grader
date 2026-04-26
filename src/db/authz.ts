@@ -4,7 +4,7 @@ import { assignments } from "@/db/schema";
 
 export const authorizeUserToEditArticle = async function authorizeArticle(
   loggedInUserId: string,
-  articleId: number
+  articleId: number,
 ): Promise<boolean> {
   const response = await db
     .select({

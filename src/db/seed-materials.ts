@@ -265,7 +265,9 @@ async function main() {
       .limit(1);
 
     if (!course) {
-      throw new Error(`Course "${COURSE_NAME}" not found. Run course seed first.`);
+      throw new Error(
+        `Course "${COURSE_NAME}" not found. Run course seed first.`,
+      );
     }
 
     console.log(`📚 Course ID: ${course.id}`);
@@ -289,11 +291,11 @@ async function main() {
         .returning({ id: courseMaterials.id });
 
       // Chunk the content
-      const chunks = chunkText(data.content);
+      const chunks = await chunkText(data.content);
 
       // Embed all chunks via Voyage AI
       console.log(
-        `  🔄 [${material.id}] ${data.title} — ${data.content.length} chars → ${chunks.length} chunks, embedding...`
+        `  🔄 [${material.id}] ${data.title} — ${data.content.length} chars → ${chunks.length} chunks, embedding...`,
       );
       const embeddings = await embedBatch(chunks);
 
@@ -304,16 +306,16 @@ async function main() {
           chunkIndex: i,
           content: text,
           embedding: embeddings[i],
-        }))
+        })),
       );
 
       console.log(
-        `  ✅ [${material.id}] ${data.title} — ${chunks.length} chunks embedded`
+        `  ✅ [${material.id}] ${data.title} — ${chunks.length} chunks embedded`,
       );
     }
 
     console.log(
-      `\n✅ Seeded ${MATERIALS.length} reference materials for "${COURSE_NAME}" with embeddings.`
+      `\n✅ Seeded ${MATERIALS.length} reference materials for "${COURSE_NAME}" with embeddings.`,
     );
   } catch (err) {
     console.error("💥 Seed failed:", err);

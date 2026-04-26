@@ -23,17 +23,25 @@ export function GradeOverrideForm({
   onClose,
 }: GradeOverrideFormProps) {
   const router = useRouter();
-  const [scores, setScores] = useState<CriterionScore[]>(initialCriterionScores);
-  const [overallFeedback, setOverallFeedback] = useState(initialOverallFeedback);
+  const [scores, setScores] = useState<CriterionScore[]>(
+    initialCriterionScores,
+  );
+  const [overallFeedback, setOverallFeedback] = useState(
+    initialOverallFeedback,
+  );
   const [saving, setSaving] = useState(false);
 
   const updateScore = (index: number, value: number) => {
     const clamped = Math.max(0, Math.min(value, scores[index].maxPoints));
-    setScores((prev) => prev.map((c, i) => (i === index ? { ...c, score: clamped } : c)));
+    setScores((prev) =>
+      prev.map((c, i) => (i === index ? { ...c, score: clamped } : c)),
+    );
   };
 
   const updateFeedback = (index: number, value: string) => {
-    setScores((prev) => prev.map((c, i) => (i === index ? { ...c, feedback: value } : c)));
+    setScores((prev) =>
+      prev.map((c, i) => (i === index ? { ...c, feedback: value } : c)),
+    );
   };
 
   const totalScore = scores.reduce((sum, c) => sum + c.score, 0);
@@ -59,7 +67,9 @@ export function GradeOverrideForm({
       <div className="flex items-center justify-between">
         <p className="text-sm font-medium">Manual Override</p>
         <div className="flex items-center gap-2">
-          <span className="text-sm font-mono">{totalScore}/{maxScore}</span>
+          <span className="text-sm font-mono">
+            {totalScore}/{maxScore}
+          </span>
           <Badge variant="outline">
             {Math.round((totalScore / maxScore) * 100)}%
           </Badge>
@@ -84,7 +94,9 @@ export function GradeOverrideForm({
                   onChange={(e) => updateScore(i, Number(e.target.value))}
                   className="w-16 text-center font-mono"
                 />
-                <span className="text-xs text-muted-foreground">/ {cs.maxPoints}</span>
+                <span className="text-xs text-muted-foreground">
+                  / {cs.maxPoints}
+                </span>
               </div>
             </div>
             <textarea
@@ -113,7 +125,12 @@ export function GradeOverrideForm({
       </div>
 
       <div className="flex justify-end gap-2 pt-1">
-        <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          disabled={saving}
+        >
           Cancel
         </Button>
         <Button type="button" onClick={save} disabled={saving}>

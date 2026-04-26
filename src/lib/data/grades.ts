@@ -13,10 +13,16 @@ export async function getGradeForSubmission(submissionId: number) {
 
 export async function getGradesForSubmissions(submissionIds: number[]) {
   if (submissionIds.length === 0) return [];
-  return db.select().from(grades).where(inArray(grades.submissionId, submissionIds));
+  return db
+    .select()
+    .from(grades)
+    .where(inArray(grades.submissionId, submissionIds));
 }
 
-export async function getGradeForStudent(assignmentId: number, studentId: string) {
+export async function getGradeForStudent(
+  assignmentId: number,
+  studentId: string,
+) {
   const [result] = await db
     .select({
       id: grades.id,
@@ -33,8 +39,8 @@ export async function getGradeForStudent(assignmentId: number, studentId: string
     .where(
       and(
         eq(submissions.assignmentId, assignmentId),
-        eq(submissions.studentId, studentId)
-      )
+        eq(submissions.studentId, studentId),
+      ),
     )
     .limit(1);
   return result ?? null;

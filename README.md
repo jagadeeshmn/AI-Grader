@@ -26,17 +26,17 @@ Three user roles enforced at both the UI and server-action level.
 - **Instructor assignment** — Assign or reassign an instructor to any course.
 - **Student enrollment** — Enroll or unenroll students through a dedicated management UI.
 - **AI analytics via MCP** — Connect Claude Desktop to the platform's MCP server and ask natural-language questions against live data:
-  - *"Which courses have the lowest submission rates?"*
-  - *"Show the grade distribution for the Networks midterm."*
-  - *"List all students who haven't submitted Assignment 3."*
+  - _"Which courses have the lowest submission rates?"_
+  - _"Show the grade distribution for the Networks midterm."_
+  - _"List all students who haven't submitted Assignment 3."_
 
 ### Instructor
 
 - **Assignment authoring** — Create and edit assignments with a live split-pane markdown editor, supporting rich text, code blocks, tables, and image attachments.
 - **Rubric definition** — Attach a structured rubric to each assignment specifying criterion, description, and max points per criterion.
-- **Course reference material** — Upload long-form reference content (lecture notes, textbook excerpts, standards documents). The platform automatically chunks the text (~2,500 chars with overlap), generates embeddings, and stores them for retrieval at grading time.
+- **Course reference material** — Upload long-form reference content (lecture notes, textbook excerpts, standards documents). The platform automatically chunks the text (~2,500 chars, 200 char overlap) using LangChain's `RecursiveCharacterTextSplitter`, generates embeddings, and stores them for retrieval at grading time.
 - **Submission deadline** — Set a deadline per assignment; submissions close automatically once the deadline passes.
-- **RAG-grounded AI grading** — For each rubric criterion, the platform retrieves the top relevant chunks from the course's reference material via cosine similarity, injects them into the grading prompt, and calls Claude with forced tool use to return structured per-criterion scores and feedback. Falls back gracefully when no materials exist.
+- **RAG-grounded AI grading** — For each rubric criterion, the platform retrieves 15 candidate chunks via pgvector cosine similarity, re-ranks them with Voyage AI's `rerank-2` cross-encoder, injects the top 5 into the grading prompt, and calls Claude with forced tool use to return structured per-criterion scores and feedback. Falls back gracefully when no materials exist.
 
 ### Student
 
@@ -52,31 +52,33 @@ A custom, lightweight RAG pipeline built directly on pgvector — no LangChain, 
 
 A built-in Model Context Protocol server exposes the database as typed tools any MCP-compatible client can call:
 
-| Tool | Description |
-|---|---|
-| `list_courses` | List all courses with enrollment + instructor |
-| `get_course_summary` | Enrollment, assignment count, submission rate, avg grade |
-| `get_submission_stats` | Per-assignment submission and grade stats |
-| `get_grade_distribution` | Grade bands, avg/min/max for an assignment |
-| `get_students_without_submissions` | Students who missed an assignment |
-| `get_ungraded_submissions` | Submissions pending grading |
+| Tool                               | Description                                              |
+| ---------------------------------- | -------------------------------------------------------- |
+| `list_courses`                     | List all courses with enrollment + instructor            |
+| `get_course_summary`               | Enrollment, assignment count, submission rate, avg grade |
+| `get_submission_stats`             | Per-assignment submission and grade stats                |
+| `get_grade_distribution`           | Grade bands, avg/min/max for an assignment               |
+| `get_students_without_submissions` | Students who missed an assignment                        |
+| `get_ungraded_submissions`         | Submissions pending grading                              |
 
 ---
 
 ## Tech Stack
 
-| Layer | Technology |
-|---|---|
-| Framework | Next.js 16 (App Router, RSC, Server Actions, Turbopack) |
-| Language | TypeScript 5 |
-| Authentication | Stack Auth (`@stackframe/stack`) |
-| Database | Neon — serverless PostgreSQL |
-| ORM | Drizzle ORM + Drizzle Kit (migrations) |
-| Vector Store | pgvector (HNSW, `vector_cosine_ops`) — colocated in Neon |
-| Embeddings | Voyage AI (`voyage-2`, 1024 dimensions) |
-| LLM | Anthropic Claude (`@anthropic-ai/sdk`) with forced tool use |
-| MCP | `@modelcontextprotocol/sdk` — stdio transport |
-| Styling | Tailwind CSS 4 + shadcn/ui (Radix UI primitives) |
-| Markdown | `@uiw/react-md-editor` (editing) + `react-markdown` (rendering) |
-| Icons | Lucide React |
-| Lint / Format | Biome |
+| Layer          | Technology                                                              |
+| -------------- | ----------------------------------------------------------------------- |
+| Framework      | Next.js 16 (App Router, RSC, Server Actions, Turbopack)                 |
+| Language       | TypeScript 5                                                            |
+| Authentication | Stack Auth (`@stackframe/stack`)                                        |
+| Database       | Neon — serverless PostgreSQL                                            |
+| ORM            | Drizzle ORM + Drizzle Kit (migrations)                                  |
+| Vector Store   | pgvector (HNSW, `vector_cosine_ops`) — colocated in Neon                |
+| Embeddings     | Voyage AI (`voyage-2`, 1024 dimensions)                                 |
+| Text Splitting | LangChain `RecursiveCharacterTextSplitter` (`@langchain/textsplitters`) |
+| Re-ranking     | Voyage AI (`rerank-2` cross-encoder)                                    |
+| LLM            | Anthropic Claude (`@anthropic-ai/sdk`) with forced tool use             |
+| MCP            | `@modelcontextprotocol/sdk` — stdio transport                           |
+| Styling        | Tailwind CSS 4 + shadcn/ui (Radix UI primitives)                        |
+| Markdown       | `@uiw/react-md-editor` (editing) + `react-markdown` (rendering)         |
+| Icons          | Lucide React                                                            |
+| Lint / Format  | Biome                                                                   |

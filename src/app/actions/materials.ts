@@ -25,7 +25,9 @@ async function requireInstructorOrAdmin(): Promise<string> {
   return user.id;
 }
 
-export async function addCourseMaterialAction(formData: FormData): Promise<void> {
+export async function addCourseMaterialAction(
+  formData: FormData,
+): Promise<void> {
   const userId = await requireInstructorOrAdmin();
 
   const courseId = Number(formData.get("courseId"));
@@ -42,7 +44,7 @@ export async function addCourseMaterialAction(formData: FormData): Promise<void>
     .returning({ id: courseMaterials.id });
 
   // 2. Chunk the content
-  const chunks = chunkText(content);
+  const chunks = await chunkText(content);
 
   // 3. Embed all chunks
   const embeddings = await embedBatch(chunks);
@@ -54,13 +56,15 @@ export async function addCourseMaterialAction(formData: FormData): Promise<void>
       chunkIndex: i,
       content: text,
       embedding: embeddings[i],
-    }))
+    })),
   );
 
   revalidatePath(`/courses/${courseId}`);
 }
 
-export async function deleteCourseMaterialAction(formData: FormData): Promise<void> {
+export async function deleteCourseMaterialAction(
+  formData: FormData,
+): Promise<void> {
   await requireInstructorOrAdmin();
 
   const materialId = Number(formData.get("materialId"));

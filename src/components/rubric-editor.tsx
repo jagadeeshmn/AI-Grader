@@ -14,20 +14,33 @@ interface RubricEditorProps {
   onClose: () => void;
 }
 
-export function RubricEditor({ assignmentId, initialRubric, onClose }: RubricEditorProps) {
+export function RubricEditor({
+  assignmentId,
+  initialRubric,
+  onClose,
+}: RubricEditorProps) {
   const router = useRouter();
   const [criteria, setCriteria] = useState<RubricCriterion[]>(
     initialRubric.length > 0
       ? initialRubric
-      : [{ criterion: "", maxPoints: 10, description: "" }]
+      : [{ criterion: "", maxPoints: 10, description: "" }],
   );
   const [saving, setSaving] = useState(false);
 
-  const update = (index: number, field: keyof RubricCriterion, value: string | number) =>
-    setCriteria((prev) => prev.map((c, i) => (i === index ? { ...c, [field]: value } : c)));
+  const update = (
+    index: number,
+    field: keyof RubricCriterion,
+    value: string | number,
+  ) =>
+    setCriteria((prev) =>
+      prev.map((c, i) => (i === index ? { ...c, [field]: value } : c)),
+    );
 
   const add = () =>
-    setCriteria((prev) => [...prev, { criterion: "", maxPoints: 10, description: "" }]);
+    setCriteria((prev) => [
+      ...prev,
+      { criterion: "", maxPoints: 10, description: "" },
+    ]);
 
   const remove = (index: number) =>
     setCriteria((prev) => prev.filter((_, i) => i !== index));
@@ -101,7 +114,12 @@ export function RubricEditor({ assignmentId, initialRubric, onClose }: RubricEdi
       </Button>
 
       <div className="flex justify-end gap-2 pt-2 border-t">
-        <Button type="button" variant="outline" onClick={onClose} disabled={saving}>
+        <Button
+          type="button"
+          variant="outline"
+          onClick={onClose}
+          disabled={saving}
+        >
           Cancel
         </Button>
         <Button type="button" onClick={save} disabled={saving}>

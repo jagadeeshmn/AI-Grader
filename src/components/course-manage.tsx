@@ -153,7 +153,10 @@ export function CourseManage({
       {/* Tabs */}
       <Tabs defaultValue="assignments" className="flex flex-col gap-4">
         <TabsList className="w-fit">
-          <TabsTrigger value="assignments" className="flex items-center gap-1.5">
+          <TabsTrigger
+            value="assignments"
+            className="flex items-center gap-1.5"
+          >
             <BookOpen className="h-3.5 w-3.5" />
             Assignments
             <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
@@ -202,7 +205,7 @@ export function CourseManage({
                   {courseAssignments.map((assignment) => {
                     const totalMarks = assignment.rubric.reduce(
                       (sum, c) => sum + c.maxPoints,
-                      0
+                      0,
                     );
                     const overdue = isOverdue(assignment.deadline);
                     return (

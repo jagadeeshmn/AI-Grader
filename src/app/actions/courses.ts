@@ -32,16 +32,20 @@ export async function unenrollStudentForm(formData: FormData): Promise<void> {
   await requireAdmin();
   const courseId = Number(formData.get("courseId"));
   const studentId = String(formData.get("studentId"));
-  await db.delete(courseStudents).where(
-    and(
-      eq(courseStudents.courseId, courseId),
-      eq(courseStudents.studentId, studentId)
-    )
-  );
+  await db
+    .delete(courseStudents)
+    .where(
+      and(
+        eq(courseStudents.courseId, courseId),
+        eq(courseStudents.studentId, studentId),
+      ),
+    );
   redirect(`/courses/${courseId}`);
 }
 
-export async function updateCourseInstructorForm(formData: FormData): Promise<void> {
+export async function updateCourseInstructorForm(
+  formData: FormData,
+): Promise<void> {
   await requireAdmin();
   const courseId = Number(formData.get("courseId"));
   const instructorId = String(formData.get("instructorId"));

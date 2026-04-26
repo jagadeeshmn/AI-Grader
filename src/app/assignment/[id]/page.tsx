@@ -1,6 +1,10 @@
 import { notFound } from "next/navigation";
 import AssignmentViewer from "@/components/assignment-viewer";
-import { getAssignmentById, getAssignmentSubmissions, getSubmissionByStudent } from "@/lib/data/assignments";
+import {
+  getAssignmentById,
+  getAssignmentSubmissions,
+  getSubmissionByStudent,
+} from "@/lib/data/assignments";
 import { getGradesForSubmissions, getGradeForStudent } from "@/lib/data/grades";
 import { stackServerApp } from "@/stack/server";
 import { authorizeUserToEditArticle } from "@/db/authz";
@@ -12,7 +16,9 @@ interface ViewAssignmentPageProps {
   params: Promise<{ id: string }>;
 }
 
-export default async function ViewAssignmentPage({ params }: ViewAssignmentPageProps) {
+export default async function ViewAssignmentPage({
+  params,
+}: ViewAssignmentPageProps) {
   const { id } = await params;
 
   let canEdit = false;
@@ -24,7 +30,11 @@ export default async function ViewAssignmentPage({ params }: ViewAssignmentPageP
     if (user) {
       userId = user.id;
       const [dbUser, editAllowed] = await Promise.all([
-        db.select({ role: usersSync.role }).from(usersSync).where(eq(usersSync.id, user.id)).limit(1),
+        db
+          .select({ role: usersSync.role })
+          .from(usersSync)
+          .where(eq(usersSync.id, user.id))
+          .limit(1),
         authorizeUserToEditArticle(user.id, +id),
       ]);
       userRole = dbUser[0]?.role ?? null;
@@ -39,7 +49,9 @@ export default async function ViewAssignmentPage({ params }: ViewAssignmentPageP
 
   const [assignment, existingSubmission, allSubmissions] = await Promise.all([
     getAssignmentById(+id),
-    userId && isStudent ? getSubmissionByStudent(+id, userId) : Promise.resolve(null),
+    userId && isStudent
+      ? getSubmissionByStudent(+id, userId)
+      : Promise.resolve(null),
     canViewSubmissions ? getAssignmentSubmissions(+id) : Promise.resolve(null),
   ]);
 
@@ -52,7 +64,9 @@ export default async function ViewAssignmentPage({ params }: ViewAssignmentPageP
       ? getGradesForSubmissions(allSubmissions.map((s) => s.id))
       : Promise.resolve([]),
     // Student: their own grade
-    userId && isStudent ? getGradeForStudent(+id, userId) : Promise.resolve(null),
+    userId && isStudent
+      ? getGradeForStudent(+id, userId)
+      : Promise.resolve(null),
   ]);
 
   return (

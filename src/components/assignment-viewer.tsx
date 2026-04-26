@@ -115,30 +115,41 @@ export default function AssignmentViewer({
   studentGrade,
 }: AssignmentViewerProps) {
   const overdue = isOverdue(assignment.deadline);
-  const totalMarks = assignment.rubric?.reduce((sum, c) => sum + c.maxPoints, 0) ?? 0;
+  const totalMarks =
+    assignment.rubric?.reduce((sum, c) => sum + c.maxPoints, 0) ?? 0;
   const canManageRubric = userRole === "instructor" || userRole === "admin";
   const [isEditingRubric, setIsEditingRubric] = useState(false);
   const isStudent = userRole === "student";
   const canViewSubmissions = userRole === "instructor" || userRole === "admin";
 
   // Build a fast lookup: submissionId → grade
-  const gradeBySubmissionId = new Map(submissionGrades.map((g) => [g.submissionId, g]));
+  const gradeBySubmissionId = new Map(
+    submissionGrades.map((g) => [g.submissionId, g]),
+  );
 
   // Track which submission is currently being overridden
-  const [overridingSubmissionId, setOverridingSubmissionId] = useState<number | null>(null);
+  const [overridingSubmissionId, setOverridingSubmissionId] = useState<
+    number | null
+  >(null);
 
   return (
     <div className="flex flex-col gap-6 px-6 py-8 lg:px-10">
       {/* Breadcrumb */}
       <nav className="flex items-center gap-1.5 text-sm text-muted-foreground">
-        <Link href="/" className="flex items-center gap-1 hover:text-foreground transition-colors">
+        <Link
+          href="/"
+          className="flex items-center gap-1 hover:text-foreground transition-colors"
+        >
           <Home className="h-3.5 w-3.5" />
           Home
         </Link>
         <ChevronRight className="h-3.5 w-3.5" />
         {assignment.courseId && (
           <>
-            <Link href={`/courses/${assignment.courseId}`} className="hover:text-foreground transition-colors">
+            <Link
+              href={`/courses/${assignment.courseId}`}
+              className="hover:text-foreground transition-colors"
+            >
               Course
             </Link>
             <ChevronRight className="h-3.5 w-3.5" />
@@ -150,7 +161,9 @@ export default function AssignmentViewer({
       {/* Hero */}
       <div className="rounded-xl border bg-card px-6 py-5 flex items-center justify-between gap-4">
         <div className="flex flex-col gap-2">
-          <h1 className="text-2xl font-bold tracking-tight">{assignment.title}</h1>
+          <h1 className="text-2xl font-bold tracking-tight">
+            {assignment.title}
+          </h1>
           <div className="flex flex-wrap items-center gap-3 text-sm text-muted-foreground">
             <span className="flex items-center gap-1">
               <User className="h-3.5 w-3.5" />
@@ -161,7 +174,9 @@ export default function AssignmentViewer({
               {formatDate(assignment.createdAt)}
             </span>
             {assignment.deadline && (
-              <span className={`flex items-center gap-1 ${overdue ? "text-destructive" : ""}`}>
+              <span
+                className={`flex items-center gap-1 ${overdue ? "text-destructive" : ""}`}
+              >
                 <CalendarClock className="h-3.5 w-3.5" />
                 {overdue ? "Closed · " : "Due · "}
                 {formatDeadline(assignment.deadline)}
@@ -199,7 +214,8 @@ export default function AssignmentViewer({
             <FileText className="h-3.5 w-3.5" />
             Assignment
           </TabsTrigger>
-          {(canManageRubric || (assignment.rubric && assignment.rubric.length > 0)) && (
+          {(canManageRubric ||
+            (assignment.rubric && assignment.rubric.length > 0)) && (
             <TabsTrigger value="rubric" className="flex items-center gap-1.5">
               <ClipboardList className="h-3.5 w-3.5" />
               Rubric
@@ -211,11 +227,16 @@ export default function AssignmentViewer({
             </TabsTrigger>
           )}
           {isStudent && (
-            <TabsTrigger value="submission" className="flex items-center gap-1.5">
+            <TabsTrigger
+              value="submission"
+              className="flex items-center gap-1.5"
+            >
               <Send className="h-3.5 w-3.5" />
               Submission
               {existingSubmission && (
-                <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">1</Badge>
+                <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
+                  1
+                </Badge>
               )}
             </TabsTrigger>
           )}
@@ -224,12 +245,18 @@ export default function AssignmentViewer({
               <Sparkles className="h-3.5 w-3.5" />
               Grade
               <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
-                {Math.round((studentGrade.totalScore / studentGrade.maxScore) * 100)}%
+                {Math.round(
+                  (studentGrade.totalScore / studentGrade.maxScore) * 100,
+                )}
+                %
               </Badge>
             </TabsTrigger>
           )}
           {canViewSubmissions && allSubmissions != null && (
-            <TabsTrigger value="submissions" className="flex items-center gap-1.5">
+            <TabsTrigger
+              value="submissions"
+              className="flex items-center gap-1.5"
+            >
               <Users className="h-3.5 w-3.5" />
               Submissions
               <Badge variant="secondary" className="ml-1 text-xs px-1.5 py-0">
@@ -260,24 +287,38 @@ export default function AssignmentViewer({
                 <ReactMarkdown
                   components={{
                     h1: ({ children }) => (
-                      <h1 className="text-3xl font-bold mt-8 mb-4 text-foreground">{children}</h1>
+                      <h1 className="text-3xl font-bold mt-8 mb-4 text-foreground">
+                        {children}
+                      </h1>
                     ),
                     h2: ({ children }) => (
-                      <h2 className="text-2xl font-semibold mt-6 mb-3 text-foreground">{children}</h2>
+                      <h2 className="text-2xl font-semibold mt-6 mb-3 text-foreground">
+                        {children}
+                      </h2>
                     ),
                     h3: ({ children }) => (
-                      <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">{children}</h3>
+                      <h3 className="text-xl font-semibold mt-4 mb-2 text-foreground">
+                        {children}
+                      </h3>
                     ),
                     p: ({ children }) => (
-                      <p className="mb-4 text-foreground leading-7">{children}</p>
+                      <p className="mb-4 text-foreground leading-7">
+                        {children}
+                      </p>
                     ),
                     ul: ({ children }) => (
-                      <ul className="mb-4 ml-6 list-disc text-foreground">{children}</ul>
+                      <ul className="mb-4 ml-6 list-disc text-foreground">
+                        {children}
+                      </ul>
                     ),
                     ol: ({ children }) => (
-                      <ol className="mb-4 ml-6 list-decimal text-foreground">{children}</ol>
+                      <ol className="mb-4 ml-6 list-decimal text-foreground">
+                        {children}
+                      </ol>
                     ),
-                    li: ({ children }) => <li className="mb-1 text-foreground">{children}</li>,
+                    li: ({ children }) => (
+                      <li className="mb-1 text-foreground">{children}</li>
+                    ),
                     code: ({ children, className }) => {
                       const isInline = !className;
                       return isInline ? (
@@ -321,7 +362,9 @@ export default function AssignmentViewer({
                       </th>
                     ),
                     td: ({ children }) => (
-                      <td className="border border-border px-4 py-2">{children}</td>
+                      <td className="border border-border px-4 py-2">
+                        {children}
+                      </td>
                     ),
                   }}
                 >
@@ -333,7 +376,8 @@ export default function AssignmentViewer({
         </TabsContent>
 
         {/* ── Rubric Tab ──────────────────────────────────────── */}
-        {(canManageRubric || (assignment.rubric && assignment.rubric.length > 0)) && (
+        {(canManageRubric ||
+          (assignment.rubric && assignment.rubric.length > 0)) && (
           <TabsContent value="rubric">
             <Card>
               <CardHeader>
@@ -343,11 +387,14 @@ export default function AssignmentViewer({
                       <ClipboardList className="h-4 w-4" />
                       Rubric
                     </CardTitle>
-                    {!isEditingRubric && assignment.rubric && assignment.rubric.length > 0 && (
-                      <p className="text-sm text-muted-foreground mt-1">
-                        {totalMarks} total marks · {assignment.rubric.length} criteria
-                      </p>
-                    )}
+                    {!isEditingRubric &&
+                      assignment.rubric &&
+                      assignment.rubric.length > 0 && (
+                        <p className="text-sm text-muted-foreground mt-1">
+                          {totalMarks} total marks · {assignment.rubric.length}{" "}
+                          criteria
+                        </p>
+                      )}
                   </div>
                   {canManageRubric && !isEditingRubric && (
                     <Button
@@ -356,7 +403,9 @@ export default function AssignmentViewer({
                       onClick={() => setIsEditingRubric(true)}
                     >
                       <Pencil className="h-3.5 w-3.5 mr-1" />
-                      {assignment.rubric && assignment.rubric.length > 0 ? "Edit" : "Add Rubric"}
+                      {assignment.rubric && assignment.rubric.length > 0
+                        ? "Edit"
+                        : "Add Rubric"}
                     </Button>
                   )}
                 </div>
@@ -374,19 +423,25 @@ export default function AssignmentViewer({
                       // biome-ignore lint/suspicious/noArrayIndexKey: display only
                       <div key={i} className="rounded-lg border p-4">
                         <div className="flex items-center justify-between gap-2 mb-2">
-                          <p className="text-sm font-medium">{criterion.criterion}</p>
+                          <p className="text-sm font-medium">
+                            {criterion.criterion}
+                          </p>
                           <Badge variant="secondary" className="shrink-0">
                             {criterion.maxPoints} pts
                           </Badge>
                         </div>
                         {criterion.description && (
-                          <p className="text-xs text-muted-foreground">{criterion.description}</p>
+                          <p className="text-xs text-muted-foreground">
+                            {criterion.description}
+                          </p>
                         )}
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <p className="text-sm text-muted-foreground">No rubric defined yet.</p>
+                  <p className="text-sm text-muted-foreground">
+                    No rubric defined yet.
+                  </p>
                 )}
               </CardContent>
             </Card>
@@ -403,7 +458,9 @@ export default function AssignmentViewer({
                   Your Submission
                 </CardTitle>
                 {assignment.deadline && (
-                  <p className={`text-sm ${overdue ? "text-destructive" : "text-muted-foreground"}`}>
+                  <p
+                    className={`text-sm ${overdue ? "text-destructive" : "text-muted-foreground"}`}
+                  >
                     {overdue ? "Deadline closed · " : "Due · "}
                     {formatDeadline(assignment.deadline)}
                   </p>
@@ -414,7 +471,8 @@ export default function AssignmentViewer({
                   <>
                     <div className="flex flex-col gap-1">
                       <p className="text-xs text-muted-foreground">
-                        Last submitted {formatDate(existingSubmission.submittedAt)}
+                        Last submitted{" "}
+                        {formatDate(existingSubmission.submittedAt)}
                       </p>
                       <div className="bg-muted rounded-lg p-4 text-sm whitespace-pre-wrap font-mono">
                         {existingSubmission.content}
@@ -431,10 +489,19 @@ export default function AssignmentViewer({
                 )}
 
                 {!overdue && (
-                  <form action={submitAssignmentForm} className="flex flex-col gap-3">
-                    <input type="hidden" name="assignmentId" value={assignment.id} />
+                  <form
+                    action={submitAssignmentForm}
+                    className="flex flex-col gap-3"
+                  >
+                    <input
+                      type="hidden"
+                      name="assignmentId"
+                      value={assignment.id}
+                    />
                     <label className="text-sm font-medium">
-                      {existingSubmission ? "Update your submission" : "Write your submission"}
+                      {existingSubmission
+                        ? "Update your submission"
+                        : "Write your submission"}
                     </label>
                     <textarea
                       name="content"
@@ -467,7 +534,9 @@ export default function AssignmentViewer({
                     <Sparkles className="h-4 w-4 text-primary" />
                     Your Grade
                     {studentGrade.source === "instructor" && (
-                      <Badge variant="outline" className="text-xs font-normal">Instructor reviewed</Badge>
+                      <Badge variant="outline" className="text-xs font-normal">
+                        Instructor reviewed
+                      </Badge>
                     )}
                   </CardTitle>
                   <div className="flex items-center gap-2">
@@ -476,12 +545,18 @@ export default function AssignmentViewer({
                     </span>
                     <Badge
                       variant={
-                        Math.round((studentGrade.totalScore / studentGrade.maxScore) * 100) >= 70
+                        Math.round(
+                          (studentGrade.totalScore / studentGrade.maxScore) *
+                            100,
+                        ) >= 70
                           ? "default"
                           : "destructive"
                       }
                     >
-                      {Math.round((studentGrade.totalScore / studentGrade.maxScore) * 100)}%
+                      {Math.round(
+                        (studentGrade.totalScore / studentGrade.maxScore) * 100,
+                      )}
+                      %
                     </Badge>
                   </div>
                 </div>
@@ -496,11 +571,16 @@ export default function AssignmentViewer({
                     <div key={i} className="rounded-lg border p-4">
                       <div className="flex items-center justify-between gap-2 mb-2">
                         <p className="text-sm font-medium">{cs.criterion}</p>
-                        <Badge variant="secondary" className="shrink-0 font-mono">
+                        <Badge
+                          variant="secondary"
+                          className="shrink-0 font-mono"
+                        >
                           {cs.score}/{cs.maxPoints}
                         </Badge>
                       </div>
-                      <p className="text-xs text-muted-foreground">{cs.feedback}</p>
+                      <p className="text-xs text-muted-foreground">
+                        {cs.feedback}
+                      </p>
                     </div>
                   ))}
                 </div>
@@ -509,7 +589,9 @@ export default function AssignmentViewer({
 
                 <div>
                   <p className="text-sm font-medium mb-1">Overall Feedback</p>
-                  <p className="text-sm text-muted-foreground">{studentGrade.overallFeedback}</p>
+                  <p className="text-sm text-muted-foreground">
+                    {studentGrade.overallFeedback}
+                  </p>
                 </div>
               </CardContent>
             </Card>
@@ -526,24 +608,35 @@ export default function AssignmentViewer({
                     <Users className="h-4 w-4" />
                     Submissions
                   </CardTitle>
-                  <Badge variant="secondary">{allSubmissions.length} submitted</Badge>
+                  <Badge variant="secondary">
+                    {allSubmissions.length} submitted
+                  </Badge>
                 </div>
               </CardHeader>
               <CardContent>
                 {allSubmissions.length === 0 ? (
-                  <p className="text-sm text-muted-foreground py-2">No submissions yet.</p>
+                  <p className="text-sm text-muted-foreground py-2">
+                    No submissions yet.
+                  </p>
                 ) : (
                   <div className="grid gap-4 lg:grid-cols-2">
                     {allSubmissions.map((sub) => {
                       const grade = gradeBySubmissionId.get(sub.id);
-                      const pct = grade ? Math.round((grade.totalScore / grade.maxScore) * 100) : null;
+                      const pct = grade
+                        ? Math.round((grade.totalScore / grade.maxScore) * 100)
+                        : null;
                       return (
-                        <div key={sub.id} className="rounded-lg border p-4 flex flex-col gap-3">
+                        <div
+                          key={sub.id}
+                          className="rounded-lg border p-4 flex flex-col gap-3"
+                        >
                           {/* Student header */}
                           <div className="flex items-center justify-between gap-2">
                             <div className="flex items-center gap-2">
                               <User className="h-4 w-4 text-muted-foreground shrink-0" />
-                              <span className="text-sm font-medium">{sub.studentName ?? "Unknown"}</span>
+                              <span className="text-sm font-medium">
+                                {sub.studentName ?? "Unknown"}
+                              </span>
                             </div>
                             <div className="flex items-center gap-3 text-xs text-muted-foreground shrink-0">
                               <span className="flex items-center gap-1">
@@ -566,20 +659,28 @@ export default function AssignmentViewer({
                                   submissionId={sub.id}
                                   initialCriterionScores={grade.criterionScores}
                                   initialOverallFeedback={grade.overallFeedback}
-                                  onClose={() => setOverridingSubmissionId(null)}
+                                  onClose={() =>
+                                    setOverridingSubmissionId(null)
+                                  }
                                 />
                               ) : (
                                 <>
                                   <div className="flex items-center justify-between">
                                     <p className="text-sm font-semibold flex items-center gap-1.5">
                                       <Sparkles className="h-4 w-4 text-primary" />
-                                      {grade.source === "instructor" ? "Instructor Grade" : "AI Grade"}
+                                      {grade.source === "instructor"
+                                        ? "Instructor Grade"
+                                        : "AI Grade"}
                                     </p>
                                     <div className="flex items-center gap-2">
                                       <span className="text-sm font-mono">
                                         {grade.totalScore}/{grade.maxScore}
                                       </span>
-                                      <Badge variant={pct! >= 70 ? "default" : "destructive"}>
+                                      <Badge
+                                        variant={
+                                          pct! >= 70 ? "default" : "destructive"
+                                        }
+                                      >
                                         {pct}%
                                       </Badge>
                                     </div>
@@ -589,22 +690,33 @@ export default function AssignmentViewer({
                                   <div className="flex flex-col divide-y text-xs">
                                     {grade.criterionScores.map((cs, i) => (
                                       // biome-ignore lint/suspicious/noArrayIndexKey: display only
-                                      <div key={i} className="py-2 first:pt-0 last:pb-0">
+                                      <div
+                                        key={i}
+                                        className="py-2 first:pt-0 last:pb-0"
+                                      >
                                         <div className="flex items-center justify-between gap-2 mb-0.5">
-                                          <span className="font-medium">{cs.criterion}</span>
+                                          <span className="font-medium">
+                                            {cs.criterion}
+                                          </span>
                                           <span className="shrink-0 font-mono text-muted-foreground">
                                             {cs.score}/{cs.maxPoints}
                                           </span>
                                         </div>
-                                        <p className="text-muted-foreground">{cs.feedback}</p>
+                                        <p className="text-muted-foreground">
+                                          {cs.feedback}
+                                        </p>
                                       </div>
                                     ))}
                                   </div>
 
                                   {/* Overall feedback */}
                                   <div className="border-t pt-3">
-                                    <p className="text-xs text-muted-foreground font-medium mb-1">Overall feedback</p>
-                                    <p className="text-xs">{grade.overallFeedback}</p>
+                                    <p className="text-xs text-muted-foreground font-medium mb-1">
+                                      Overall feedback
+                                    </p>
+                                    <p className="text-xs">
+                                      {grade.overallFeedback}
+                                    </p>
                                   </div>
 
                                   {/* Actions */}
@@ -613,12 +725,18 @@ export default function AssignmentViewer({
                                       type="button"
                                       variant="outline"
                                       size="sm"
-                                      onClick={() => setOverridingSubmissionId(sub.id)}
+                                      onClick={() =>
+                                        setOverridingSubmissionId(sub.id)
+                                      }
                                     >
                                       Override
                                     </Button>
                                     <form action={gradeSubmissionAction}>
-                                      <input type="hidden" name="submissionId" value={sub.id} />
+                                      <input
+                                        type="hidden"
+                                        name="submissionId"
+                                        value={sub.id}
+                                      />
                                       <ReGradeButton />
                                     </form>
                                   </div>
@@ -626,8 +744,15 @@ export default function AssignmentViewer({
                               )}
                             </div>
                           ) : (
-                            <form action={gradeSubmissionAction} className="flex justify-end">
-                              <input type="hidden" name="submissionId" value={sub.id} />
+                            <form
+                              action={gradeSubmissionAction}
+                              className="flex justify-end"
+                            >
+                              <input
+                                type="hidden"
+                                name="submissionId"
+                                value={sub.id}
+                              />
                               <GradeWithAIButton />
                             </form>
                           )}
@@ -644,8 +769,12 @@ export default function AssignmentViewer({
 
       {/* Footer */}
       <div className="flex justify-start">
-        <Link href={assignment.courseId ? `/courses/${assignment.courseId}` : "/"}>
-          <Button variant="outline" size="sm">← Back to Course</Button>
+        <Link
+          href={assignment.courseId ? `/courses/${assignment.courseId}` : "/"}
+        >
+          <Button variant="outline" size="sm">
+            ← Back to Course
+          </Button>
         </Link>
       </div>
     </div>

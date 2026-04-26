@@ -1,5 +1,12 @@
 import db from "@/db/index";
-import { assignments, courseStudents, courses, grades, submissions, usersSync } from "@/db/schema";
+import {
+  assignments,
+  courseStudents,
+  courses,
+  grades,
+  submissions,
+  usersSync,
+} from "@/db/schema";
 import { and, avg, count, eq, isNull, sql } from "drizzle-orm";
 
 // ── List all courses with enrollment + assignment counts ──────────────────────
@@ -59,7 +66,11 @@ export async function getCourseSummary(courseId: number) {
     .where(eq(assignments.courseId, courseId));
 
   const avgGradeRow = await db
-    .select({ avgPct: avg(sql<number>`(${grades.totalScore}::float / ${grades.maxScore}::float) * 100`) })
+    .select({
+      avgPct: avg(
+        sql<number>`(${grades.totalScore}::float / ${grades.maxScore}::float) * 100`,
+      ),
+    })
     .from(grades)
     .innerJoin(submissions, eq(grades.submissionId, submissions.id))
     .innerJoin(assignments, eq(submissions.assignmentId, assignments.id))
@@ -77,16 +88,21 @@ export async function getCourseSummary(courseId: number) {
         ? Math.round((Number(totalSubmissions) / maxPossibleSubmissions) * 100)
         : 0,
     gradedCount: Number(gradedCount),
-    avgGradePct: avgGradeRow[0]?.avgPct != null
-      ? Math.round(Number(avgGradeRow[0].avgPct))
-      : null,
+    avgGradePct:
+      avgGradeRow[0]?.avgPct != null
+        ? Math.round(Number(avgGradeRow[0].avgPct))
+        : null,
   };
 }
 
 // ── Per-assignment submission + grade stats for a course ──────────────────────
 export async function getSubmissionStats(courseId: number) {
   const courseAssignments = await db
-    .select({ id: assignments.id, title: assignments.title, deadline: assignments.deadline })
+    .select({
+      id: assignments.id,
+      title: assignments.title,
+      deadline: assignments.deadline,
+    })
     .from(assignments)
     .where(eq(assignments.courseId, courseId))
     .orderBy(assignments.createdAt);
@@ -108,7 +124,7 @@ export async function getSubmissionStats(courseId: number) {
       const avgRow = await db
         .select({
           avgPct: avg(
-            sql<number>`(${grades.totalScore}::float / ${grades.maxScore}::float) * 100`
+            sql<number>`(${grades.totalScore}::float / ${grades.maxScore}::float) * 100`,
           ),
         })
         .from(grades)
@@ -124,11 +140,15 @@ export async function getSubmissionStats(courseId: number) {
         submitted: submittedCount,
         notSubmitted: enrolledCount - submittedCount,
         submissionRate:
-          enrolledCount > 0 ? Math.round((submittedCount / enrolledCount) * 100) : 0,
+          enrolledCount > 0
+            ? Math.round((submittedCount / enrolledCount) * 100)
+            : 0,
         avgGradePct:
-          avgRow[0]?.avgPct != null ? Math.round(Number(avgRow[0].avgPct)) : null,
+          avgRow[0]?.avgPct != null
+            ? Math.round(Number(avgRow[0].avgPct))
+            : null,
       };
-    })
+    }),
   );
 
   return stats;
@@ -155,10 +175,19 @@ export async function getGradeDistribution(assignmentId: number) {
     .where(eq(submissions.assignmentId, assignmentId));
 
   if (allGrades.length === 0) {
-    return { title: assignment.title, count: 0, avg: null, min: null, max: null, bands: null };
+    return {
+      title: assignment.title,
+      count: 0,
+      avg: null,
+      min: null,
+      max: null,
+      bands: null,
+    };
   }
 
-  const pcts = allGrades.map((g) => Math.round((g.totalScore / g.maxScore) * 100));
+  const pcts = allGrades.map((g) =>
+    Math.round((g.totalScore / g.maxScore) * 100),
+  );
   const avg = Math.round(pcts.reduce((a, b) => a + b, 0) / pcts.length);
   const min = Math.min(...pcts);
   const max = Math.max(...pcts);
@@ -171,7 +200,9 @@ export async function getGradeDistribution(assignmentId: number) {
   };
 
   const aiGraded = allGrades.filter((g) => g.source === "ai").length;
-  const instructorOverridden = allGrades.filter((g) => g.source === "instructor").length;
+  const instructorOverridden = allGrades.filter(
+    (g) => g.source === "instructor",
+  ).length;
 
   return {
     title: assignment.title,
@@ -237,7 +268,7 @@ export async function getUngradedSubmissions(courseId?: number) {
     .where(
       courseId
         ? and(isNull(grades.id), eq(assignments.courseId, courseId))
-        : isNull(grades.id)
+        : isNull(grades.id),
     )
     .orderBy(submissions.submittedAt);
 

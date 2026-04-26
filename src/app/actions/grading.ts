@@ -1,11 +1,17 @@
 "use server";
 
-import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import Anthropic from "@anthropic-ai/sdk";
 import { eq } from "drizzle-orm";
 import { stackServerApp } from "@/stack/server";
 import db from "@/db/index";
-import { assignments, grades, submissions, usersSync, type CriterionScore } from "@/db/schema";
+import {
+  assignments,
+  grades,
+  submissions,
+  usersSync,
+  type CriterionScore,
+} from "@/db/schema";
 import { retrieveChunks } from "@/lib/rag/retrieval";
 
 const client = new Anthropic();
@@ -27,7 +33,10 @@ export async function gradeSubmissionAction(formData: FormData): Promise<void> {
   const submissionId = Number(formData.get("submissionId"));
 
   const [submission] = await db
-    .select({ content: submissions.content, assignmentId: submissions.assignmentId })
+    .select({
+      content: submissions.content,
+      assignmentId: submissions.assignmentId,
+    })
     .from(submissions)
     .where(eq(submissions.id, submissionId))
     .limit(1);
@@ -47,11 +56,16 @@ export async function gradeSubmissionAction(formData: FormData): Promise<void> {
 
   if (!assignment) throw new Error("Assignment not found");
   if (!assignment.rubric || assignment.rubric.length === 0) {
-    throw new Error("This assignment has no rubric. Add a rubric before grading.");
+    throw new Error(
+      "This assignment has no rubric. Add a rubric before grading.",
+    );
   }
 
   const rubricText = assignment.rubric
-    .map((c, i) => `${i + 1}. **${c.criterion}** (${c.maxPoints} pts)\n   ${c.description}`)
+    .map(
+      (c, i) =>
+        `${i + 1}. **${c.criterion}** (${c.maxPoints} pts)\n   ${c.description}`,
+    )
     .join("\n\n");
 
   // RAG: retrieve relevant reference material chunks using rubric as query
@@ -122,7 +136,10 @@ Grade each rubric criterion strictly and fairly.${chunks.length > 0 ? " Ground y
     overallFeedback: string;
   };
 
-  const totalScore = result.criterionScores.reduce((sum, c) => sum + c.score, 0);
+  const totalScore = result.criterionScores.reduce(
+    (sum, c) => sum + c.score,
+    0,
+  );
   const maxScore = assignment.rubric.reduce((sum, c) => sum + c.maxPoints, 0);
 
   await db
@@ -147,13 +164,13 @@ Grade each rubric criterion strictly and fairly.${chunks.length > 0 ? " Ground y
       },
     });
 
-  redirect(`/assignment/${submission.assignmentId}`);
+  revalidatePath(`/assignment/${submission.assignmentId}`);
 }
 
 export async function overrideGradeAction(
   submissionId: number,
   criterionScores: CriterionScore[],
-  overallFeedback: string
+  overallFeedback: string,
 ): Promise<void> {
   const user = await stackServerApp.getUser();
   if (!user) throw new Error("❌ Unauthorized");

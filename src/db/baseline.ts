@@ -38,11 +38,11 @@ async function main() {
 
   for (const m of applied) {
     const existing = await db.execute(
-      sql`SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = ${m.hash}`
+      sql`SELECT 1 FROM drizzle.__drizzle_migrations WHERE hash = ${m.hash}`,
     );
     if (existing.rows.length === 0) {
       await db.execute(
-        sql`INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES (${m.hash}, ${m.createdAt})`
+        sql`INSERT INTO drizzle.__drizzle_migrations (hash, created_at) VALUES (${m.hash}, ${m.createdAt})`,
       );
       console.log(`Baselined: ${m.name}`);
     } else {

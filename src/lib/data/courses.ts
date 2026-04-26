@@ -1,5 +1,11 @@
 import db from "@/db/index";
-import { assignments, courses, courseStudents, courseMaterials, usersSync } from "@/db/schema";
+import {
+  assignments,
+  courses,
+  courseStudents,
+  courseMaterials,
+  usersSync,
+} from "@/db/schema";
 import { and, eq } from "drizzle-orm";
 
 export async function getCourses() {
@@ -94,8 +100,8 @@ export async function isStudentEnrolled(courseId: number, studentId: string) {
     .where(
       and(
         eq(courseStudents.courseId, courseId),
-        eq(courseStudents.studentId, studentId)
-      )
+        eq(courseStudents.studentId, studentId),
+      ),
     )
     .limit(1);
   return !!row;
@@ -116,11 +122,16 @@ export async function getCoursesByInstructor(instructorId: string) {
     .where(eq(courses.instructorId, instructorId));
 }
 
-export async function isInstructorAssigned(courseId: number, instructorId: string) {
+export async function isInstructorAssigned(
+  courseId: number,
+  instructorId: string,
+) {
   const [row] = await db
     .select({ id: courses.id })
     .from(courses)
-    .where(and(eq(courses.id, courseId), eq(courses.instructorId, instructorId)))
+    .where(
+      and(eq(courses.id, courseId), eq(courses.instructorId, instructorId)),
+    )
     .limit(1);
   return !!row;
 }

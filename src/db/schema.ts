@@ -58,7 +58,7 @@ export const courseStudents = pgTable(
       .defaultNow()
       .notNull(),
   },
-  (table) => [primaryKey({ columns: [table.courseId, table.studentId] })]
+  (table) => [primaryKey({ columns: [table.courseId, table.studentId] })],
 );
 
 export type CourseStudent = typeof courseStudents.$inferSelect;
@@ -108,11 +108,16 @@ export const submissions = pgTable(
       .notNull()
       .references(() => usersSync.id, { onDelete: "cascade" }),
     content: text("content").notNull(),
-    submittedAt: timestamp("submitted_at", { mode: "string" }).defaultNow().notNull(),
+    submittedAt: timestamp("submitted_at", { mode: "string" })
+      .defaultNow()
+      .notNull(),
   },
   (table) => [
-    unique("uq_submission_student_assignment").on(table.assignmentId, table.studentId),
-  ]
+    unique("uq_submission_student_assignment").on(
+      table.assignmentId,
+      table.studentId,
+    ),
+  ],
 );
 
 export type Submission = typeof submissions.$inferSelect;
@@ -133,11 +138,15 @@ export const grades = pgTable("grades", {
     .notNull()
     .unique()
     .references(() => submissions.id, { onDelete: "cascade" }),
-  criterionScores: jsonb("criterion_scores").$type<CriterionScore[]>().notNull(),
+  criterionScores: jsonb("criterion_scores")
+    .$type<CriterionScore[]>()
+    .notNull(),
   overallFeedback: text("overall_feedback").notNull(),
   totalScore: integer("total_score").notNull(),
   maxScore: integer("max_score").notNull(),
-  source: text("source", { enum: ["ai", "instructor"] }).default("ai").notNull(),
+  source: text("source", { enum: ["ai", "instructor"] })
+    .default("ai")
+    .notNull(),
   gradedAt: timestamp("graded_at", { mode: "string" }).defaultNow().notNull(),
 });
 
@@ -174,15 +183,15 @@ export const materialChunks = pgTable(
       .notNull()
       .references(() => courseMaterials.id, { onDelete: "cascade" }),
     chunkIndex: integer("chunk_index").notNull(), // ordering within material
-    content: text("content").notNull(),           // ~2,500 chars with overlap
+    content: text("content").notNull(), // ~2,500 chars with overlap
     embedding: vector("embedding", { dimensions: 1024 }), // Voyage AI voyage-2
   },
   (table) => [
     index("idx_material_chunks_embedding").using(
       "hnsw",
-      table.embedding.op("vector_cosine_ops")
+      table.embedding.op("vector_cosine_ops"),
     ),
-  ]
+  ],
 );
 
 export type MaterialChunk = typeof materialChunks.$inferSelect;
