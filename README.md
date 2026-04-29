@@ -46,7 +46,41 @@ Three user roles enforced at both the UI and server-action level.
 
 ### Retrieval-Augmented Grading Pipeline
 
-A custom, lightweight RAG pipeline built directly on pgvector — no LangChain, no external vector DB
+A two-stage RAG pipeline built on pgvector with cross-encoder re-ranking — no external vector DB:
+
+```
+Instructor uploads reference material
+         │
+         ▼
+  LangChain RecursiveCharacterTextSplitter (~2,500 chars, 200 char overlap)
+         │
+         ▼
+  Voyage AI embeddings (voyage-2, 1024 dims, batched)
+         │
+         ▼
+  pgvector table with HNSW index (vector_cosine_ops)
+
+─────────────────────────────────────────────────────
+
+Instructor clicks "Evaluate"
+         │
+         ▼
+  For each rubric criterion:
+    query = criterion + description
+    retrieve top 15 candidates (cosine distance, scoped by courseId via JOIN)
+         │
+         ▼
+  Voyage AI rerank-2 cross-encoder → top 5 chunks by relevance score
+         │
+         ▼
+  Prompt = system + rubric + assignment + submission + top 5 chunks
+         │
+         ▼
+  Claude (forced tool use) → { scores[], totalMarks, feedback }
+         │
+         ▼
+  Written to evaluations table
+```
 
 ### MCP Analytics Server
 
