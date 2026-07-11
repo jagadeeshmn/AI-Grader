@@ -1,10 +1,10 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
-import { stackServerApp } from "@/stack/server";
+import { redirect } from "next/navigation";
 import db from "@/db/index";
 import { courseStudents, courses, usersSync } from "@/db/schema";
+import { stackServerApp } from "@/stack/server";
 
 async function requireAdmin() {
   const user = await stackServerApp.getUser();

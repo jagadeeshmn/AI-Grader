@@ -1,6 +1,5 @@
 "use client";
 
-import Link from "next/link";
 import {
   BookOpen,
   CalendarClock,
@@ -11,6 +10,7 @@ import {
   Home,
   Users,
 } from "lucide-react";
+import Link from "next/link";
 import { CourseMaterials } from "@/components/course-materials";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";

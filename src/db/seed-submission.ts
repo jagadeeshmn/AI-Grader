@@ -5,15 +5,16 @@
  * Run with: npm run db:seed:submission
  * Safe to re-run — upserts on conflict.
  */
+
+import { and, eq } from "drizzle-orm";
 import db from "@/db/index";
 import {
   assignments,
-  courses,
   courseStudents,
+  courses,
   submissions,
   usersSync,
 } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 
 const COURSE_NAME = "Networks";
 const ASSIGNMENT_TITLE = "OSI Model & Network Layers";

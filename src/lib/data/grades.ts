@@ -1,6 +1,6 @@
+import { and, eq, inArray } from "drizzle-orm";
 import db from "@/db/index";
 import { grades, submissions } from "@/db/schema";
-import { and, eq, inArray } from "drizzle-orm";
 
 export async function getGradeForSubmission(submissionId: number) {
   const [grade] = await db

@@ -1,5 +1,5 @@
-import { stackServerApp } from "@/stack/server";
 import AssignmentEditor from "@/components/assignment-editor";
+import { stackServerApp } from "@/stack/server";
 
 interface EditAssignmentPageProps {
   params: Promise<{

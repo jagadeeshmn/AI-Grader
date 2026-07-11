@@ -1,81 +1,44 @@
-@AGENTS.md
-
 # AI Grader
 
-Role-based course management and AI grading platform.
-
-## Roles
-
-- **Admin** — course/enrollment management, AI analytics via MCP
-- **Instructor** — assignment authoring (markdown), rubric builder, AI-assisted grading
-- **Student** — submissions, grades/feedback, AI companion chat
+Role-based course platform (Admin/Instructor/Student) with a RAG grading pipeline.
 
 ## Stack
 
-- **Framework:** Next.js 16 (App Router) with Turbopack
-- **Language:** TypeScript
-- **Auth:** Stack Auth (`@stackframe/stack`)
-- **Database:** Neon PostgreSQL (serverless) + Drizzle ORM
-- **Styling:** Tailwind CSS 4 + shadcn/ui (Radix UI primitives)
-- **AI:** Anthropic Claude API (`@anthropic-ai/sdk`)
-- **MCP:** `@modelcontextprotocol/sdk` — analytics server for admin
-- **Linter/Formatter:** Biome
+- Next.js 16 App Router, React Server Components, Server Actions, TypeScript 5
+- Neon Postgres + Drizzle ORM (migrations via drizzle-kit)
+- Stack Auth, Tailwind 4, shadcn/ui, Biome for lint/format
+- Anthropic SDK (@anthropic-ai/sdk), Claude Haiku 4.5, forced tool use
+- RAG: LangChain splitter, Voyage voyage-2 embeddings (1024d, HNSW), rerank-2
+- Langfuse for tracing (in progress)
 
-## Dev Commands
+## Commands
 
-```bash
-npm run dev          # Start dev server (Turbopack)
-npm run build        # Production build (Turbopack)
-npm run lint         # Biome check
-npm run format       # Biome format --write
-npm run typecheck    # tsc --noEmit
-npm run mcp          # Start MCP analytics server
-```
+- npm run dev / npm run build
+- npx biome check --write .
+- npx drizzle-kit generate && npx drizzle-kit migrate
+- [add your test command once tests exist]
 
-## Database Commands
+## Architecture conventions
 
-```bash
-npm run db:generate  # Generate Drizzle migrations
-npm run db:migrate   # Run migrations
-npm run db:seed      # Seed base data
-```
+- Server actions in src/app/actions/ are thin callers only. Business logic
+  lives in pure functions under src/lib/.
+- Grading has two modes behind GRADING_MODE=single|agentic. The single-pass
+  path is the control in an A/B experiment: NEVER modify its behavior.
+- Agent modules live in src/lib/agents/, each an async function
+  (state: GradingState) => Partial<GradingState>.
+- All structured LLM calls go through callStructured() in
+  src/lib/agents/llm.ts (forced tool use, Zod-derived input_schema,
+  schema.parse on the result).
+- One Langfuse trace per grading run, one span per agent.
 
-## Post-Edit Checks
+## Active work
 
-After editing any file, always run:
+Implementing docs/plans/AI_Grader_Multi_Agent_Plan.md. Follow its step
+numbers. Current step: [update as you go].
 
-```bash
-npm run lint && npm run format && npm run typecheck
-```
+## Rules
 
-## Project Structure
-
-```
-src/
-  app/        # Next.js App Router pages and API routes
-  components/ # Shared UI components
-  db/         # Drizzle schema, migrations, seed scripts
-  lib/        # Business logic and data access (analytics.ts, etc.)
-  mcp/        # MCP server (server.ts) — exposes analytics tools to Claude
-  stack/      # Stack Auth configuration
-  types/      # Shared TypeScript types
-```
-
-## MCP Analytics Server
-
-Exposes the following tools to Claude:
-
-- `list_courses` — list all courses with enrollment + instructor
-- `get_course_summary` — enrollment, assignment count, submission rate, avg grade
-- `get_submission_stats` — per-assignment submission and grade stats
-- `get_grade_distribution` — grade bands, avg/min/max for an assignment
-- `get_students_without_submissions` — students who missed an assignment
-- `get_ungraded_submissions` — submissions pending grading
-
-Run with `npm run mcp`. Uses stdio transport.
-
-## Environment Variables
-
-- `DATABASE_URL` — Neon PostgreSQL connection string
-- Stack Auth keys (see Stack Auth dashboard)
-- Anthropic API key for AI grading and student chat
+- Ask before any schema change or new dependency.
+- Never touch .env or commit secrets.
+- Small diffs: one step of the plan per session, stop after each for review.
+- Write or update tests for any pure function you add.

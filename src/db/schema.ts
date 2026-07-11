@@ -1,16 +1,16 @@
 import {
-  pgTable,
-  serial,
+  boolean,
+  index,
   integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  serial,
   text,
   timestamp,
-  boolean,
-  primaryKey,
-  jsonb,
   unique,
-  index,
+  vector,
 } from "drizzle-orm/pg-core";
-import { vector } from "drizzle-orm/pg-core";
 
 // ─── Users ────────────────────────────────────────────────────────────────────
 // Mirrors Stack Auth users. Role controls what the user can do.

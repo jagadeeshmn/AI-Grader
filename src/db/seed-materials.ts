@@ -8,9 +8,9 @@
  * the embed-materials script (or upload via the UI, which embeds automatically).
  */
 import "dotenv/config";
-import db from "@/db/index";
-import { courses, courseMaterials, materialChunks } from "@/db/schema";
 import { eq } from "drizzle-orm";
+import db from "@/db/index";
+import { courseMaterials, courses, materialChunks } from "@/db/schema";
 import { chunkText } from "@/lib/rag/chunker";
 import { embedBatch } from "@/lib/rag/embeddings";
 
@@ -214,7 +214,7 @@ When a user types www.university.edu into their browser for the first time, the 
 
 Step 1 — Browser Cache: The browser checks its own DNS cache for a recent mapping. Modern browsers cache DNS results for the duration specified by the TTL (Time To Live) field in the DNS response. If found and not expired, the cached IP is used immediately — no network query needed.
 
-Step 2 — Operating System Resolver Cache: If the browser cache misses, the OS stub resolver is consulted. The OS maintains its own DNS cache (viewable on Windows with "ipconfig /displaydns" and flushable with "ipconfig /flushdns"). The OS also checks the local hosts file (/etc/hosts on Unix, C:\Windows\System32\drivers\etc\hosts on Windows) before making any network queries.
+Step 2 — Operating System Resolver Cache: If the browser cache misses, the OS stub resolver is consulted. The OS maintains its own DNS cache (viewable on Windows with "ipconfig /displaydns" and flushable with "ipconfig /flushdns"). The OS also checks the local hosts file (/etc/hosts on Unix, C:WindowsSystem32driversetchosts on Windows) before making any network queries.
 
 Step 3 — Recursive Resolver Query: The OS sends the query to its configured recursive resolver (typically provided by the ISP, or a public resolver like Google's 8.8.8.8 or Cloudflare's 1.1.1.1). The recursive resolver acts on behalf of the client and will perform the iterative queries needed to resolve the domain. The resolver first checks its own cache — if it recently resolved this domain or any parent domain, it can skip directly to the relevant nameserver.
 

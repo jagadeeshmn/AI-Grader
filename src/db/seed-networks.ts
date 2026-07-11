@@ -4,10 +4,11 @@
  *
  * Safe to re-run — clears only Networks assignments before inserting.
  */
+
+import { and, eq } from "drizzle-orm";
 import db, { sql } from "@/db/index";
-import { assignments, usersSync, courses } from "@/db/schema";
-import { eq, and } from "drizzle-orm";
 import type { RubricCriterion } from "@/db/schema";
+import { assignments, courses, usersSync } from "@/db/schema";
 
 const COURSE_NAME = "Networks";
 

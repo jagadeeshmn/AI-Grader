@@ -1,6 +1,6 @@
+import { and, eq } from "drizzle-orm";
 import db from "@/db/index";
 import { assignments, submissions, usersSync } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 
 export async function getAssignments() {
   const response = await db
