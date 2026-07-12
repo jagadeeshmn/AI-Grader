@@ -1,7 +1,7 @@
 "use client";
 
-import { useFormStatus } from "react-dom";
 import { Loader2, Sparkles } from "lucide-react";
+import { useFormStatus } from "react-dom";
 import { Button } from "@/components/ui/button";
 
 export function GradeWithAIButton() {

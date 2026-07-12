@@ -1,12 +1,12 @@
 "use server";
 
-import { revalidatePath } from "next/cache";
 import { eq } from "drizzle-orm";
-import { stackServerApp } from "@/stack/server";
+import { revalidatePath } from "next/cache";
 import db from "@/db/index";
 import { courseMaterials, materialChunks, usersSync } from "@/db/schema";
 import { chunkText } from "@/lib/rag/chunker";
 import { embedBatch } from "@/lib/rag/embeddings";
+import { stackServerApp } from "@/stack/server";
 
 async function requireInstructorOrAdmin(): Promise<string> {
   const user = await stackServerApp.getUser();

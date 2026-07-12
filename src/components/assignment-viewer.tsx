@@ -23,15 +23,15 @@ import ReactMarkdown from "react-markdown";
 import { deleteAssignmentForm } from "@/app/actions/assignments";
 import { gradeSubmissionAction } from "@/app/actions/grading";
 import { submitAssignmentForm } from "@/app/actions/submissions";
-import type { CriterionScore, RubricCriterion } from "@/db/schema";
+import { GradeWithAIButton, ReGradeButton } from "@/components/grade-button";
+import { GradeOverrideForm } from "@/components/grade-override-form";
+import { RubricEditor } from "@/components/rubric-editor";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { GradeOverrideForm } from "@/components/grade-override-form";
-import { GradeWithAIButton, ReGradeButton } from "@/components/grade-button";
-import { RubricEditor } from "@/components/rubric-editor";
+import type { CriterionScore, RubricCriterion } from "@/db/schema";
 
 interface ViewerAssignment {
   title: string;

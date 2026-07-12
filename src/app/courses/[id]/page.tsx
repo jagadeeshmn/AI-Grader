@@ -1,20 +1,20 @@
-import { notFound } from "next/navigation";
 import { eq } from "drizzle-orm";
-import { stackServerApp } from "@/stack/server";
+import { notFound } from "next/navigation";
+import { CourseManage } from "@/components/course-manage";
+import { CourseView } from "@/components/course-view";
 import db from "@/db/index";
 import { usersSync } from "@/db/schema";
 import {
-  getCourseById,
-  getCourseStudents,
-  getAllStudents,
   getAllInstructors,
+  getAllStudents,
   getCourseAssignments,
+  getCourseById,
   getCourseMaterials,
-  isStudentEnrolled,
+  getCourseStudents,
   isInstructorAssigned,
+  isStudentEnrolled,
 } from "@/lib/data/courses";
-import { CourseManage } from "@/components/course-manage";
-import { CourseView } from "@/components/course-view";
+import { stackServerApp } from "@/stack/server";
 
 interface CoursePageProps {
   params: Promise<{ id: string }>;

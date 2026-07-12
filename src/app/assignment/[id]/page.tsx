@@ -1,16 +1,16 @@
+import { eq } from "drizzle-orm";
 import { notFound } from "next/navigation";
 import AssignmentViewer from "@/components/assignment-viewer";
+import { authorizeUserToEditArticle } from "@/db/authz";
+import db from "@/db/index";
+import { usersSync } from "@/db/schema";
 import {
   getAssignmentById,
   getAssignmentSubmissions,
   getSubmissionByStudent,
 } from "@/lib/data/assignments";
-import { getGradesForSubmissions, getGradeForStudent } from "@/lib/data/grades";
+import { getGradeForStudent, getGradesForSubmissions } from "@/lib/data/grades";
 import { stackServerApp } from "@/stack/server";
-import { authorizeUserToEditArticle } from "@/db/authz";
-import db from "@/db/index";
-import { usersSync } from "@/db/schema";
-import { eq } from "drizzle-orm";
 
 interface ViewAssignmentPageProps {
   params: Promise<{ id: string }>;

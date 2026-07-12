@@ -1,6 +1,6 @@
 import { redirect } from "next/navigation";
-import { stackServerApp } from "@/stack/server";
 import { ensureUserExists } from "@/db/sync-user";
+import { stackServerApp } from "@/stack/server";
 
 export default async function AfterSignUpPage() {
   const user = await stackServerApp.getUser({ or: "redirect" });

@@ -1,0 +1,587 @@
+[
+  {
+    "submissionId": 4,
+    "studentId": "eval-student-001",
+    "assignmentTitle": "OSI Model & Network Layers",
+    "groundTruth": {
+      "totalScore": 95,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 24,
+          "feedback": "All seven layers accurate with protocols and apt analogies; presentation layer detail slightly thin.",
+          "criterion": "Layer Descriptions",
+          "maxPoints": 25
+        },
+        {
+          "score": 29,
+          "feedback": "Complete bidirectional trace with handshake, ports, ARP, and reassembly. Only minor omission: DNS lookup before connection.",
+          "criterion": "HTTP Request Trace",
+          "maxPoints": 30
+        },
+        {
+          "score": 20,
+          "feedback": "Correct PDU table including FCS trailer and decapsulation.",
+          "criterion": "Encapsulation Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 13,
+          "feedback": "Stack diagram referenced and table well laid out, though the diagram itself is schematic.",
+          "criterion": "Diagram Quality",
+          "maxPoints": 15
+        },
+        {
+          "score": 9,
+          "feedback": "Clear structure, credible references cited.",
+          "criterion": "Writing & References",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 5,
+    "studentId": "eval-student-002",
+    "assignmentTitle": "OSI Model & Network Layers",
+    "groundTruth": {
+      "totalScore": 72,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 20,
+          "feedback": "All layers named correctly with protocols, but session and presentation descriptions are one-liners with no analogies or depth.",
+          "criterion": "Layer Descriptions",
+          "maxPoints": 25
+        },
+        {
+          "score": 22,
+          "feedback": "Correct top-down flow with handshake and ports, but the server-side unwrap is glossed over and layers 5-6 are skipped in the trace.",
+          "criterion": "HTTP Request Trace",
+          "maxPoints": 30
+        },
+        {
+          "score": 16,
+          "feedback": "PDU sequence correct; missing the frame trailer (FCS) and any table or per-layer header detail.",
+          "criterion": "Encapsulation Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 7,
+          "feedback": "No diagram provided; partial credit for the clear textual stack ordering.",
+          "criterion": "Diagram Quality",
+          "maxPoints": 15
+        },
+        {
+          "score": 7,
+          "feedback": "Readable and organised; only 'class notes' cited.",
+          "criterion": "Writing & References",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 6,
+    "studentId": "eval-student-003",
+    "assignmentTitle": "OSI Model & Network Layers",
+    "groundTruth": {
+      "totalScore": 39,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 12,
+          "feedback": "Four layers described correctly at a basic level; session, presentation, and data link are admitted guesses with no real content.",
+          "criterion": "Layer Descriptions",
+          "maxPoints": 25
+        },
+        {
+          "score": 12,
+          "feedback": "Captures only the high-level idea (down one stack, up the other, TCP before HTTP). No ports, addresses, handshake steps, or per-layer actions.",
+          "criterion": "HTTP Request Trace",
+          "maxPoints": 30
+        },
+        {
+          "score": 9,
+          "feedback": "Envelope analogy shows the concept is understood, but no PDU names or per-layer headers.",
+          "criterion": "Encapsulation Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 2,
+          "feedback": "No diagram or structured presentation.",
+          "criterion": "Diagram Quality",
+          "maxPoints": 15
+        },
+        {
+          "score": 4,
+          "feedback": "Understandable but unstructured; no references.",
+          "criterion": "Writing & References",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 7,
+    "studentId": "eval-student-004",
+    "assignmentTitle": "OSI Model & Network Layers",
+    "groundTruth": {
+      "totalScore": 11,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 4,
+          "feedback": "Layer count and names are largely wrong ('Internet', 'Hardware', 'Software' are not OSI layers); only Application and Physical are recognisable, and Physical is misdescribed.",
+          "criterion": "Layer Descriptions",
+          "maxPoints": 25
+        },
+        {
+          "score": 4,
+          "feedback": "No layered trace at all; 'HTTP layer which is the fastest layer' is a misconception.",
+          "criterion": "HTTP Request Trace",
+          "maxPoints": 30
+        },
+        {
+          "score": 0,
+          "feedback": "Answers the OOP meaning of encapsulation, not network encapsulation \u2014 not the concept asked.",
+          "criterion": "Encapsulation Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 0,
+          "feedback": "No diagram.",
+          "criterion": "Diagram Quality",
+          "maxPoints": 15
+        },
+        {
+          "score": 3,
+          "feedback": "Sentences are readable, but no structure or references.",
+          "criterion": "Writing & References",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 8,
+    "studentId": "eval-student-005",
+    "assignmentTitle": "OSI Model & Network Layers",
+    "groundTruth": {
+      "totalScore": 2,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 0,
+          "feedback": "No OSI content.",
+          "criterion": "Layer Descriptions",
+          "maxPoints": 25
+        },
+        {
+          "score": 0,
+          "feedback": "No trace content.",
+          "criterion": "HTTP Request Trace",
+          "maxPoints": 30
+        },
+        {
+          "score": 0,
+          "feedback": "Not addressed.",
+          "criterion": "Encapsulation Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 0,
+          "feedback": "No diagram.",
+          "criterion": "Diagram Quality",
+          "maxPoints": 15
+        },
+        {
+          "score": 2,
+          "feedback": "Well-written prose, but entirely off-topic.",
+          "criterion": "Writing & References",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 14,
+    "studentId": "eval-student-001",
+    "assignmentTitle": "Subnetting & IP Addressing",
+    "groundTruth": {
+      "totalScore": 95,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 34,
+          "feedback": "All four /26 subnets, ranges, and broadcasts correct with working shown.",
+          "criterion": "Subnetting Accuracy",
+          "maxPoints": 35
+        },
+        {
+          "score": 24,
+          "feedback": "Correct largest-first allocation with per-block ranges and a sound fixed-length comparison.",
+          "criterion": "VLSM Optimisation",
+          "maxPoints": 25
+        },
+        {
+          "score": 19,
+          "feedback": "Accurate PAT mechanics, RFC 1918 ranges, drawbacks, and the IPv6 connection.",
+          "criterion": "NAT Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 18,
+          "feedback": "Clear tables and arithmetic throughout; a small address-plan diagram would perfect it.",
+          "criterion": "Presentation & Working",
+          "maxPoints": 20
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 15,
+    "studentId": "eval-student-002",
+    "assignmentTitle": "Subnetting & IP Addressing",
+    "groundTruth": {
+      "totalScore": 78,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 29,
+          "feedback": "Subnets and host ranges correct; broadcast addresses not listed and working only sketched.",
+          "criterion": "Subnetting Accuracy",
+          "maxPoints": 35
+        },
+        {
+          "score": 20,
+          "feedback": "Correct allocations largest-first; missing host ranges per block and the leftover /28 observation.",
+          "criterion": "VLSM Optimisation",
+          "maxPoints": 25
+        },
+        {
+          "score": 15,
+          "feedback": "Core translation-table idea and motivation correct; no PAT/port detail, RFC 1918 ranges, or protocol caveats.",
+          "criterion": "NAT Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 14,
+          "feedback": "Organised lists, but limited shown arithmetic and no tables/diagram.",
+          "criterion": "Presentation & Working",
+          "maxPoints": 20
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 16,
+    "studentId": "eval-student-003",
+    "assignmentTitle": "Subnetting & IP Addressing",
+    "groundTruth": {
+      "totalScore": 47,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 20,
+          "feedback": "Correct /26 boundaries, but 'holds 64 hosts' misses the network/broadcast subtraction (62 usable) and no ranges or working shown.",
+          "criterion": "Subnetting Accuracy",
+          "maxPoints": 35
+        },
+        {
+          "score": 8,
+          "feedback": "Concept stated correctly but the actual allocation \u2014 the core of the task \u2014 was not attempted.",
+          "criterion": "VLSM Optimisation",
+          "maxPoints": 25
+        },
+        {
+          "score": 11,
+          "feedback": "Purpose and motivation right at a consumer level; no mechanism (translation table, ports) or drawbacks.",
+          "criterion": "NAT Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 8,
+          "feedback": "Sections used, but no tables, arithmetic, or diagrams.",
+          "criterion": "Presentation & Working",
+          "maxPoints": 20
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 17,
+    "studentId": "eval-student-004",
+    "assignmentTitle": "Subnetting & IP Addressing",
+    "groundTruth": {
+      "totalScore": 11,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 5,
+          "feedback": "The 'add 4' method and 255-host claim are wrong; no understanding of masks, block sizes, or borrowed bits.",
+          "criterion": "Subnetting Accuracy",
+          "maxPoints": 35
+        },
+        {
+          "score": 0,
+          "feedback": "VLSM is not a cable; the concept was not understood at all.",
+          "criterion": "VLSM Optimisation",
+          "maxPoints": 25
+        },
+        {
+          "score": 2,
+          "feedback": "Wrong expansion and a hardware misidentification; only the vague association with home internet access earns anything.",
+          "criterion": "NAT Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 4,
+          "feedback": "Readable paragraphs but no working, tables, or structure.",
+          "criterion": "Presentation & Working",
+          "maxPoints": 20
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 18,
+    "studentId": "eval-student-005",
+    "assignmentTitle": "Subnetting & IP Addressing",
+    "groundTruth": {
+      "totalScore": 2,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 0,
+          "feedback": "No subnetting content.",
+          "criterion": "Subnetting Accuracy",
+          "maxPoints": 35
+        },
+        {
+          "score": 0,
+          "feedback": "Not addressed.",
+          "criterion": "VLSM Optimisation",
+          "maxPoints": 25
+        },
+        {
+          "score": 0,
+          "feedback": "Not addressed.",
+          "criterion": "NAT Explanation",
+          "maxPoints": 20
+        },
+        {
+          "score": 2,
+          "feedback": "Well-organised writing, but entirely off-topic.",
+          "criterion": "Presentation & Working",
+          "maxPoints": 20
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 9,
+    "studentId": "eval-student-001",
+    "assignmentTitle": "TCP vs UDP \u2014 Deep Dive",
+    "groundTruth": {
+      "totalScore": 95,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 24,
+          "feedback": "Comprehensive and accurate table including congestion control and header sizes.",
+          "criterion": "Protocol Comparison Table",
+          "maxPoints": 25
+        },
+        {
+          "score": 24,
+          "feedback": "Correct sequence with ISNs, states, and purpose; teardown noted. Minor: could mention SYN flood/half-open risk.",
+          "criterion": "Three-Way Handshake",
+          "maxPoints": 25
+        },
+        {
+          "score": 19,
+          "feedback": "Strong justification citing staleness, head-of-line blocking, and app-level sequencing.",
+          "criterion": "Design Justification \u2014 Game",
+          "maxPoints": 20
+        },
+        {
+          "score": 19,
+          "feedback": "Correct and well-argued integrity/ordering rationale.",
+          "criterion": "Design Justification \u2014 File Transfer",
+          "maxPoints": 20
+        },
+        {
+          "score": 9,
+          "feedback": "Clean tables and a clear handshake diagram.",
+          "criterion": "Diagrams & Presentation",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 10,
+    "studentId": "eval-student-002",
+    "assignmentTitle": "TCP vs UDP \u2014 Deep Dive",
+    "groundTruth": {
+      "totalScore": 77,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 19,
+          "feedback": "Accurate core table; missing flow/congestion control and header overhead rows.",
+          "criterion": "Protocol Comparison Table",
+          "maxPoints": 25
+        },
+        {
+          "score": 19,
+          "feedback": "Correct SYN / SYN-ACK / ACK order and purpose; no sequence-number detail, states, or diagram.",
+          "criterion": "Three-Way Handshake",
+          "maxPoints": 25
+        },
+        {
+          "score": 16,
+          "feedback": "Right choice with a sound staleness argument; could discuss app-level sequencing or head-of-line blocking.",
+          "criterion": "Design Justification \u2014 Game",
+          "maxPoints": 20
+        },
+        {
+          "score": 17,
+          "feedback": "Correct and clearly justified, if brief.",
+          "criterion": "Design Justification \u2014 File Transfer",
+          "maxPoints": 20
+        },
+        {
+          "score": 6,
+          "feedback": "Tidy table but no handshake diagram.",
+          "criterion": "Diagrams & Presentation",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 11,
+    "studentId": "eval-student-003",
+    "assignmentTitle": "TCP vs UDP \u2014 Deep Dive",
+    "groundTruth": {
+      "totalScore": 47,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 12,
+          "feedback": "Reliability/speed/use-case contrasts correct but no actual table and only three properties compared.",
+          "criterion": "Protocol Comparison Table",
+          "maxPoints": 25
+        },
+        {
+          "score": 11,
+          "feedback": "Knows it is three messages involving SYN/ACK but cannot give the sequence or its purpose in detail.",
+          "criterion": "Three-Way Handshake",
+          "maxPoints": 25
+        },
+        {
+          "score": 10,
+          "feedback": "Correct choice but justification is a single word ('faster') without the latency-vs-staleness reasoning.",
+          "criterion": "Design Justification \u2014 Game",
+          "maxPoints": 20
+        },
+        {
+          "score": 11,
+          "feedback": "Correct choice with a minimal but valid reliability argument.",
+          "criterion": "Design Justification \u2014 File Transfer",
+          "maxPoints": 20
+        },
+        {
+          "score": 3,
+          "feedback": "No table or diagram; plain paragraphs.",
+          "criterion": "Diagrams & Presentation",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 12,
+    "studentId": "eval-student-004",
+    "assignmentTitle": "TCP vs UDP \u2014 Deep Dive",
+    "groundTruth": {
+      "totalScore": 16,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 3,
+          "feedback": "Both expansions are wrong, and the newer/older framing is a misconception; no table or valid comparison.",
+          "criterion": "Protocol Comparison Table",
+          "maxPoints": 25
+        },
+        {
+          "score": 2,
+          "feedback": "'Three computers connecting' is incorrect \u2014 the handshake is three messages between two hosts.",
+          "criterion": "Three-Way Handshake",
+          "maxPoints": 25
+        },
+        {
+          "score": 3,
+          "feedback": "Wrong choice for a fast-paced game and no technical justification ('TCP is the best' is not an argument).",
+          "criterion": "Design Justification \u2014 Game",
+          "maxPoints": 20
+        },
+        {
+          "score": 6,
+          "feedback": "Choice happens to be correct but the reasoning is not grounded in reliability or ordering.",
+          "criterion": "Design Justification \u2014 File Transfer",
+          "maxPoints": 20
+        },
+        {
+          "score": 2,
+          "feedback": "No table or diagram.",
+          "criterion": "Diagrams & Presentation",
+          "maxPoints": 10
+        }
+      ]
+    }
+  },
+  {
+    "submissionId": 13,
+    "studentId": "eval-student-005",
+    "assignmentTitle": "TCP vs UDP \u2014 Deep Dive",
+    "groundTruth": {
+      "totalScore": 1,
+      "maxScore": 100,
+      "criterionScores": [
+        {
+          "score": 0,
+          "feedback": "No networking content.",
+          "criterion": "Protocol Comparison Table",
+          "maxPoints": 25
+        },
+        {
+          "score": 0,
+          "feedback": "Not addressed.",
+          "criterion": "Three-Way Handshake",
+          "maxPoints": 25
+        },
+        {
+          "score": 0,
+          "feedback": "Not addressed.",
+          "criterion": "Design Justification \u2014 Game",
+          "maxPoints": 20
+        },
+        {
+          "score": 0,
+          "feedback": "Not addressed.",
+          "criterion": "Design Justification \u2014 File Transfer",
+          "maxPoints": 20
+        },
+        {
+          "score": 1,
+          "feedback": "Coherent writing, but entirely off-topic.",
+          "criterion": "Diagrams & Presentation",
+          "maxPoints": 10
+        }
+      ]
+    }
+  }
+]

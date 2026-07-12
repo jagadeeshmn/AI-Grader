@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import {
   ChevronDown,
   ChevronRight,
@@ -8,6 +7,7 @@ import {
   Plus,
   Trash2,
 } from "lucide-react";
+import { useState } from "react";
 import {
   addCourseMaterialAction,
   deleteCourseMaterialAction,

@@ -4,8 +4,8 @@
  * After running this, `npm run db:migrate` will only apply new migrations.
  */
 import { neon } from "@neondatabase/serverless";
-import { drizzle } from "drizzle-orm/neon-http";
 import { sql } from "drizzle-orm";
+import { drizzle } from "drizzle-orm/neon-http";
 import "dotenv/config";
 
 // hash = SHA-256 of migration file content

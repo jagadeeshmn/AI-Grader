@@ -1,11 +1,11 @@
 import Link from "next/link";
 import {
   Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
   CardHeader,
   CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
 } from "@/components/ui/card";
 
 interface AssignmentCardProps {

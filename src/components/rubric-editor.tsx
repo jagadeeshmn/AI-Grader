@@ -1,12 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
 import { Plus, Trash2 } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { updateAssignmentRubric } from "@/app/actions/assignments";
-import type { RubricCriterion } from "@/db/schema";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import type { RubricCriterion } from "@/db/schema";
 
 interface RubricEditorProps {
   assignmentId: number;

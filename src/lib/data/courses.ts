@@ -1,12 +1,12 @@
+import { and, eq } from "drizzle-orm";
 import db from "@/db/index";
 import {
   assignments,
-  courses,
-  courseStudents,
   courseMaterials,
+  courseStudents,
+  courses,
   usersSync,
 } from "@/db/schema";
-import { and, eq } from "drizzle-orm";
 
 export async function getCourses() {
   return db

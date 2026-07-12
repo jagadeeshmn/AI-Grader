@@ -1,16 +1,16 @@
 import {
-  pgTable,
-  serial,
+  boolean,
+  index,
   integer,
+  jsonb,
+  pgTable,
+  primaryKey,
+  serial,
   text,
   timestamp,
-  boolean,
-  primaryKey,
-  jsonb,
   unique,
-  index,
+  vector,
 } from "drizzle-orm/pg-core";
-import { vector } from "drizzle-orm/pg-core";
 
 // ─── Users ────────────────────────────────────────────────────────────────────
 // Mirrors Stack Auth users. Role controls what the user can do.
@@ -147,6 +147,11 @@ export const grades = pgTable("grades", {
   source: text("source", { enum: ["ai", "instructor"] })
     .default("ai")
     .notNull(),
+  // Set when the critique loop hits its revision cap without an accept, so
+  // instructors see low-confidence grades first.
+  needsReview: boolean("needs_review").default(false).notNull(),
+  // How many critique-driven revisions this grade went through.
+  revisionCount: integer("revision_count").default(0).notNull(),
   gradedAt: timestamp("graded_at", { mode: "string" }).defaultNow().notNull(),
 });
 

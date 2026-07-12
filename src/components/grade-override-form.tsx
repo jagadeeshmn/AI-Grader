@@ -1,13 +1,13 @@
 "use client";
 
-import { useState } from "react";
 import { useRouter } from "next/navigation";
+import { useState } from "react";
 import { overrideGradeAction } from "@/app/actions/grading";
-import type { CriterionScore } from "@/db/schema";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
+import type { CriterionScore } from "@/db/schema";
 
 interface GradeOverrideFormProps {
   submissionId: number;

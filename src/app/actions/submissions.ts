@@ -1,10 +1,10 @@
 "use server";
 
-import { redirect } from "next/navigation";
 import { and, eq } from "drizzle-orm";
-import { stackServerApp } from "@/stack/server";
+import { redirect } from "next/navigation";
 import db from "@/db/index";
 import { assignments, submissions, usersSync } from "@/db/schema";
+import { stackServerApp } from "@/stack/server";
 
 export async function submitAssignmentForm(formData: FormData): Promise<void> {
   const user = await stackServerApp.getUser();

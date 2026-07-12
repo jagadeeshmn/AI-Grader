@@ -50,6 +50,13 @@
       "when": 1775603377027,
       "tag": "0006_romantic_lightspeed",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1783805488502,
+      "tag": "0007_violet_ben_urich",
+      "breakpoints": true
     }
   ]
 }

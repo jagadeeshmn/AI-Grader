@@ -1,3 +1,4 @@
+import { and, avg, count, eq, isNull, sql } from "drizzle-orm";
 import db from "@/db/index";
 import {
   assignments,
@@ -7,7 +8,6 @@ import {
   submissions,
   usersSync,
 } from "@/db/schema";
-import { and, avg, count, eq, isNull, sql } from "drizzle-orm";
 
 // ── List all courses with enrollment + assignment counts ──────────────────────
 export async function listCourses() {

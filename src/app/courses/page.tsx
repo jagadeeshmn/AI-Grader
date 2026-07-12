@@ -1,6 +1,11 @@
-import Link from "next/link";
 import { eq } from "drizzle-orm";
-import { stackServerApp } from "@/stack/server";
+import { BookOpen, ChevronRight, GraduationCap, Home } from "lucide-react";
+import Link from "next/link";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Separator } from "@/components/ui/separator";
 import db from "@/db/index";
 import { usersSync } from "@/db/schema";
 import {
@@ -8,12 +13,7 @@ import {
   getCoursesByInstructor,
   getEnrolledCourses,
 } from "@/lib/data/courses";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Separator } from "@/components/ui/separator";
-import { Avatar, AvatarFallback } from "@/components/ui/avatar";
-import { BookOpen, ChevronRight, GraduationCap, Home } from "lucide-react";
+import { stackServerApp } from "@/stack/server";
 
 const PALETTE = [
   { borderColor: "#6366f1", iconBg: "#e0e7ff", iconColor: "#4f46e5" },

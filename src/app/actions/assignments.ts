@@ -1,17 +1,17 @@
 "use server";
 
-import { redirect } from "next/navigation";
-import { stackServerApp } from "@/stack/server";
 import { and, eq } from "drizzle-orm";
+import { redirect } from "next/navigation";
 import { authorizeUserToEditArticle } from "@/db/authz";
 import db from "@/db/index";
 import {
   assignments,
   courses,
-  usersSync,
   type RubricCriterion,
+  usersSync,
 } from "@/db/schema";
 import { ensureUserExists } from "@/db/sync-user";
+import { stackServerApp } from "@/stack/server";
 
 export type CreateAssignmentInput = {
   title: string;
