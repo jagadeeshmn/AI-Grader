@@ -26,10 +26,10 @@ When an instructor uploads reference material, it is split with LangChain's `Rec
 
 `runGrading()` (`src/lib/grading/index.ts`) dispatches on the `GRADING_MODE` env flag:
 
-| Mode | What it is |
-| --- | --- |
-| `single` (**default**) | One retrieval pass + one Claude call (`src/lib/grading/single.ts`). The frozen control arm of the A/B experiment — never modified. |
-| `agentic` | Multi-agent pipeline (`src/lib/agents/orchestrator.ts`): Retrieval → Grading → Critique (revision loop, max 2 re-grades) → Feedback. |
+| Mode                   | What it is                                                                                                                           |
+| ---------------------- | ------------------------------------------------------------------------------------------------------------------------------------ |
+| `single` (**default**) | One retrieval pass + one Claude call (`src/lib/grading/single.ts`). The frozen control arm of the A/B experiment — never modified.   |
+| `agentic`              | Multi-agent pipeline (`src/lib/agents/orchestrator.ts`): Retrieval → Grading → Critique (revision loop, max 2 re-grades) → Feedback. |
 
 `single` is the default: the agentic pipeline slightly improves mean error and exact-match agreement, but is less consistent, ~3× slower, and ~6.6× more expensive in input tokens (see the numbers below).
 
@@ -61,21 +61,21 @@ The eval harness lives in `evals/` and runs against a dev server through a secre
 
 ### A/B results (2026-07-12, 15 items × 3 runs per mode)
 
-| Metric | single | agentic |
-| --- | --- | --- |
-| Runs | 45 | 32¹ |
-| Mean total-score error (% of max) | 10.6% | **8.9%** |
-| Median total-score error (% of max) | **5.0%** | 7.5% |
-| Runs within 1 pt of instructor | **11.1%** | 9.4% |
-| Per-criterion within 1 pt | **53.8%** | 53.3% |
-| Per-criterion exact match | 30.6% | **32.0%** |
-| Consistency: mean std-dev of total | **1.64** | 2.02 |
-| Mean input tokens / run | **4,231** | 28,007 |
-| Mean output tokens / run | **1,342** | 4,036 |
-| Mean LLM calls / run | **1.0** | 3.8 |
-| Mean latency | **13.5 s** | 44.1 s |
-| Revision-trigger rate | — | 21.9% |
-| Needs-review rate | — | 15.6% |
+| Metric                              | single     | agentic   |
+| ----------------------------------- | ---------- | --------- |
+| Runs                                | 45         | 32¹       |
+| Mean total-score error (% of max)   | 10.6%      | **8.9%**  |
+| Median total-score error (% of max) | **5.0%**   | 7.5%      |
+| Runs within 1 pt of instructor      | **11.1%**  | 9.4%      |
+| Per-criterion within 1 pt           | **53.8%**  | 53.3%     |
+| Per-criterion exact match           | 30.6%      | **32.0%** |
+| Consistency: mean std-dev of total  | **1.64**   | 2.02      |
+| Mean input tokens / run             | **4,231**  | 28,007    |
+| Mean output tokens / run            | **1,342**  | 4,036     |
+| Mean LLM calls / run                | **1.0**    | 3.8       |
+| Mean latency                        | **13.5 s** | 44.1 s    |
+| Revision-trigger rate               | —          | 21.9%     |
+| Needs-review rate                   | —          | 15.6%     |
 
 ¹ 13 agentic runs failed (request errors/timeouts) and are excluded.
 
@@ -91,101 +91,35 @@ TODO — planned but not yet implemented. There are no `cache_control` breakpoin
 
 A built-in Model Context Protocol server (`npm run mcp`, stdio transport) exposes the database as typed tools any MCP client — e.g. Claude Desktop — can call:
 
-| Tool | Description |
-| --- | --- |
-| `list_courses` | List all courses with enrollment + instructor |
-| `get_course_summary` | Enrollment, assignment count, submission rate, avg grade |
-| `get_submission_stats` | Per-assignment submission and grade stats |
-| `get_grade_distribution` | Grade bands, avg/min/max for an assignment |
-| `get_students_without_submissions` | Students who missed an assignment |
-| `get_ungraded_submissions` | Submissions pending grading |
+| Tool                               | Description                                              |
+| ---------------------------------- | -------------------------------------------------------- |
+| `list_courses`                     | List all courses with enrollment + instructor            |
+| `get_course_summary`               | Enrollment, assignment count, submission rate, avg grade |
+| `get_submission_stats`             | Per-assignment submission and grade stats                |
+| `get_grade_distribution`           | Grade bands, avg/min/max for an assignment               |
+| `get_students_without_submissions` | Students who missed an assignment                        |
+| `get_ungraded_submissions`         | Submissions pending grading                              |
 
-Example admin questions: *"Which courses have the lowest submission rates?"*, *"Show the grade distribution for the Networks midterm."*
+Example admin questions: _"Which courses have the lowest submission rates?"_, _"Show the grade distribution for the Networks midterm."_
 
 ---
 
 ## Tech stack
 
-| Layer | Technology |
-| --- | --- |
-| Framework | Next.js 16 (App Router, RSC, Server Actions, Turbopack) |
-| Language | TypeScript 5 |
-| Auth | Stack Auth (`@stackframe/stack`) |
-| Database | Neon serverless Postgres + Drizzle ORM / Drizzle Kit |
-| Vector store | pgvector (HNSW, `vector_cosine_ops`), colocated in Neon |
-| Embeddings | Voyage AI `voyage-2` (1024 dims) |
-| Re-ranking | Voyage AI `rerank-2` cross-encoder |
-| Text splitting | LangChain `RecursiveCharacterTextSplitter` |
-| LLM | Claude Haiku 4.5 via `@anthropic-ai/sdk`, forced tool use, Zod-validated |
-| Tracing | Langfuse (`@langfuse/tracing` + OTel) |
-| MCP | `@modelcontextprotocol/sdk` (stdio) |
-| UI | Tailwind CSS 4, shadcn/ui, `@uiw/react-md-editor`, `react-markdown` |
-| Lint / format / tests | Biome, Vitest |
+| Layer                 | Technology                                                               |
+| --------------------- | ------------------------------------------------------------------------ |
+| Framework             | Next.js 16 (App Router, RSC, Server Actions, Turbopack)                  |
+| Language              | TypeScript 5                                                             |
+| Auth                  | Stack Auth (`@stackframe/stack`)                                         |
+| Database              | Neon serverless Postgres + Drizzle ORM / Drizzle Kit                     |
+| Vector store          | pgvector (HNSW, `vector_cosine_ops`), colocated in Neon                  |
+| Embeddings            | Voyage AI `voyage-2` (1024 dims)                                         |
+| Re-ranking            | Voyage AI `rerank-2` cross-encoder                                       |
+| Text splitting        | LangChain `RecursiveCharacterTextSplitter`                               |
+| LLM                   | Claude Haiku 4.5 via `@anthropic-ai/sdk`, forced tool use, Zod-validated |
+| Tracing               | Langfuse (`@langfuse/tracing` + OTel)                                    |
+| MCP                   | `@modelcontextprotocol/sdk` (stdio)                                      |
+| UI                    | Tailwind CSS 4, shadcn/ui, `@uiw/react-md-editor`, `react-markdown`      |
+| Lint / format / tests | Biome, Vitest                                                            |
 
 ---
-
-## Setup
-
-```bash
-git clone <repo-url> && cd aigrader
-npm install
-```
-
-Create `.env` with:
-
-```bash
-DATABASE_URL=            # Neon Postgres connection string
-ANTHROPIC_API_KEY=       # Claude
-VOYAGE_API_KEY=          # embeddings + re-ranking
-
-# Stack Auth
-NEXT_PUBLIC_STACK_PROJECT_ID=
-NEXT_PUBLIC_STACK_PUBLISHABLE_CLIENT_KEY=
-STACK_SECRET_SERVER_KEY=
-
-# Optional
-GRADING_MODE=single      # single (default) | agentic
-RETRIEVAL_MODE=shared    # shared (default) | per_criterion
-EVAL_SECRET=             # enables the /api/eval/grade route
-LANGFUSE_PUBLIC_KEY=     # enables tracing (with secret key)
-LANGFUSE_SECRET_KEY=
-LANGFUSE_BASE_URL=       # only for self-hosted Langfuse
-```
-
-Then:
-
-```bash
-npm run db:migrate       # apply Drizzle migrations
-npm run db:seed          # seed base data (see also db:seed:networks,
-                         #   db:seed:materials, db:seed:golden)
-npm run dev              # http://localhost:3000
-npm test                 # vitest
-npm run lint             # biome
-```
-
-### Running the eval
-
-```bash
-cd evals
-python -m venv .venv && .venv/bin/pip install -r requirements.txt
-# with the dev server running and EVAL_SECRET set in both environments:
-EVAL_SECRET=... .venv/bin/python run_eval.py --runs 3
-```
-
-Results are written to `evals/results/<timestamp>.json` and a single-vs-agentic comparison table is printed.
-
-### MCP server (Claude Desktop)
-
-Add to `claude_desktop_config.json`:
-
-```json
-{
-  "mcpServers": {
-    "aigrader-analytics": {
-      "command": "npm",
-      "args": ["run", "mcp"],
-      "cwd": "/absolute/path/to/aigrader"
-    }
-  }
-}
-```
