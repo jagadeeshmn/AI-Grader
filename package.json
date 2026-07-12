@@ -15,6 +15,7 @@
     "db:seed:networks": "tsx src/db/seed-networks.ts",
     "db:seed:submission": "tsx src/db/seed-submission.ts",
     "db:seed:materials": "tsx src/db/seed-materials.ts",
+    "db:seed:golden": "tsx src/db/seed-golden.ts",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "tsx src/db/migrate.ts",
     "mcp": "tsx -r dotenv/config src/mcp/server.ts"
@@ -22,8 +23,11 @@
   "dependencies": {
     "@anthropic-ai/sdk": "^0.82.0",
     "@langchain/textsplitters": "^1.0.1",
+    "@langfuse/otel": "^5.9.1",
+    "@langfuse/tracing": "^5.9.1",
     "@modelcontextprotocol/sdk": "^1.29.0",
     "@neondatabase/serverless": "^1.0.2",
+    "@opentelemetry/sdk-trace-node": "^2.9.0",
     "@radix-ui/react-navigation-menu": "^1.2.14",
     "@radix-ui/react-slot": "^1.2.3",
     "@stackframe/stack": "^2.8.80",

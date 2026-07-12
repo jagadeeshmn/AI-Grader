@@ -45,20 +45,32 @@ export const critiqueOutputSchema = z.object({
 });
 export type CritiqueOutput = z.infer<typeof critiqueOutputSchema>;
 
+// Output of the Feedback Agent: student-facing markdown feedback.
+export const feedbackOutputSchema = z.object({
+  feedback: z
+    .string()
+    .describe(
+      "Student-facing feedback in markdown: what was done well, what to improve, and concrete next steps",
+    ),
+});
+export type FeedbackOutput = z.infer<typeof feedbackOutputSchema>;
+
 // Shared state for the agentic grading pipeline. Every agent reads this and
 // returns only the fields it updates (see AgentFn).
 export interface GradingState {
   submissionId: string;
-  courseId: string;
+  courseId: number;
+  assignmentTitle: string;
+  assignmentContent: string;
   submissionText: string;
   rubric: RubricCriterion[];
+  // criterionId is the rubric criterion name (RubricCriterion has no id).
   contextBundles: { criterionId: string; chunks: RankedChunk[] }[];
   draftGrade: PerCriterionGrade[] | null;
   critique: { verdict: "accept" | "revise"; notes: string } | null;
   revisionCount: number; // hard cap, e.g. 2
   finalGrade: PerCriterionGrade[] | null;
   studentFeedback: string | null;
-  trace: unknown; // TODO: LangfuseTraceClient once langfuse is added (Step 10)
 }
 
 export type AgentFn = (state: GradingState) => Promise<Partial<GradingState>>;

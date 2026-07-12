@@ -59,6 +59,7 @@ export async function gradeSubmissionAction(formData: FormData): Promise<void> {
   }
 
   const result = await runGrading({
+    submissionId: String(submissionId),
     courseId: assignment.courseId,
     assignmentTitle: assignment.title,
     assignmentContent: assignment.content,
@@ -75,6 +76,8 @@ export async function gradeSubmissionAction(formData: FormData): Promise<void> {
       totalScore: result.totalScore,
       maxScore: result.maxScore,
       source: "ai",
+      revisionCount: result.diagnostics?.revisionCount ?? 0,
+      needsReview: result.diagnostics?.needsReview ?? false,
     })
     .onConflictDoUpdate({
       target: grades.submissionId,
@@ -84,6 +87,8 @@ export async function gradeSubmissionAction(formData: FormData): Promise<void> {
         totalScore: result.totalScore,
         maxScore: result.maxScore,
         source: "ai",
+        revisionCount: result.diagnostics?.revisionCount ?? 0,
+        needsReview: result.diagnostics?.needsReview ?? false,
         gradedAt: new Date().toISOString(),
       },
     });

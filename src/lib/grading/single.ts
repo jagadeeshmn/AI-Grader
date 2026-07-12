@@ -1,5 +1,6 @@
 import Anthropic from "@anthropic-ai/sdk";
 import type { CriterionScore, RubricCriterion } from "@/db/schema";
+import { recordUsage } from "@/lib/agents/usage";
 import { retrieveChunks } from "@/lib/rag/retrieval";
 
 const client = new Anthropic();
@@ -12,11 +13,20 @@ export interface GradeSubmissionInput {
   submissionText: string;
 }
 
+// Run diagnostics set only by the agentic pipeline; the single-pass control
+// never populates it (type-only addition — control behavior unchanged).
+export interface GradingDiagnostics {
+  revisionCount: number;
+  critiqueVerdict: "accept" | "revise" | "none";
+  needsReview: boolean;
+}
+
 export interface GradingResult {
   criterionScores: CriterionScore[];
   overallFeedback: string;
   totalScore: number;
   maxScore: number;
+  diagnostics?: GradingDiagnostics;
 }
 
 // Single-pass grading: one RAG retrieval over the whole rubric, one forced
@@ -90,6 +100,17 @@ Grade each rubric criterion strictly and fairly.${chunks.length > 0 ? " Ground y
     ],
     tool_choice: { type: "tool", name: "grade_submission" },
     messages: [{ role: "user", content: prompt }],
+  });
+
+  // Observational only (eval harness): reads the already-returned usage
+  // field; no-op outside withUsageCollection(). Prompt, model, params, and
+  // return value are untouched — the A/B control's behavior is unchanged.
+  recordUsage({
+    label: "grade_submission_single",
+    inputTokens: response.usage?.input_tokens ?? 0,
+    outputTokens: response.usage?.output_tokens ?? 0,
+    cacheReadTokens: response.usage?.cache_read_input_tokens ?? 0,
+    cacheWriteTokens: response.usage?.cache_creation_input_tokens ?? 0,
   });
 
   const toolBlock = response.content.find((b) => b.type === "tool_use");

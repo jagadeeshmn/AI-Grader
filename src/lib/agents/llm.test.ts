@@ -2,6 +2,7 @@ import { beforeEach, describe, expect, it, vi } from "vitest";
 import { z } from "zod";
 import { callStructured } from "./llm";
 import { critiqueOutputSchema, gradeSubmissionOutputSchema } from "./state";
+import { withUsageCollection } from "./usage";
 
 // Mock the Anthropic SDK so no network calls happen. callStructured must
 // route its request through client.messages.create.
@@ -201,5 +202,30 @@ describe("callStructured", () => {
     );
 
     await expect(callStructured(critiqueParams)).rejects.toThrow(z.ZodError);
+  });
+
+  it("records usage (incl. cache fields) inside withUsageCollection", async () => {
+    mockCreate.mockResolvedValue({
+      ...anthropicResponse([toolUseBlock("critique_grade", validCritique)]),
+      usage: {
+        input_tokens: 100,
+        output_tokens: 40,
+        cache_read_input_tokens: 250,
+        cache_creation_input_tokens: 75,
+      },
+    });
+
+    const { usage } = await withUsageCollection(() =>
+      callStructured(critiqueParams),
+    );
+
+    expect(usage.llmCalls).toBe(1);
+    expect(usage.calls[0]).toEqual({
+      label: "critique_grade",
+      inputTokens: 100,
+      outputTokens: 40,
+      cacheReadTokens: 250,
+      cacheWriteTokens: 75,
+    });
   });
 });
