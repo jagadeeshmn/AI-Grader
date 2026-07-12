@@ -20,42 +20,7 @@ Grading is not a blind LLM call. Reference material is chunked, embedded, and st
 
 ### RAG pipeline
 
-```
-Instructor uploads reference material
-         │
-         ▼
-  LangChain RecursiveCharacterTextSplitter (~2,500 chars, 200 overlap)
-         │
-         ▼
-  Voyage AI embeddings (voyage-2, 1024 dims, batched)
-         │
-         ▼
-  pgvector table with HNSW index (vector_cosine_ops)
-
-─────────────────────────────────────────────────────
-
-Grading run
-         │
-         ▼
-  query = all rubric criteria + descriptions (one combined query)
-         │
-         ▼
-  top 15 candidates via cosine similarity (course-scoped)
-         │
-         ▼
-  Voyage rerank-2 cross-encoder → top 5 chunks
-         │
-         ▼
-  Prompt = system + rubric + assignment + submission + chunks
-         │
-         ▼
-  Claude Haiku 4.5, forced tool use → { criterionScores[], totalScore, feedback }
-         │
-         ▼
-  Written to the grades table
-```
-
-No external vector DB — embeddings are colocated with the app data in Neon Postgres. Falls back gracefully when a course has no reference material.
+When an instructor uploads reference material, it is split with LangChain's `RecursiveCharacterTextSplitter` (~2,500 chars, 200 overlap), embedded with Voyage `voyage-2` (1024 dims), and stored in a pgvector table with an HNSW index — no external vector DB, embeddings live alongside the app data in Neon. At grading time, one combined query built from all rubric criteria retrieves the top 15 course-scoped candidates by cosine similarity, Voyage `rerank-2` cuts them to the top 5, and those chunks go into the grading prompt alongside the rubric, assignment, and submission. Claude Haiku 4.5 returns structured per-criterion scores via forced tool use, written to the `grades` table. Grading falls back gracefully when a course has no reference material.
 
 ### Two grading modes
 
@@ -63,27 +28,25 @@ No external vector DB — embeddings are colocated with the app data in Neon Pos
 
 | Mode | What it is |
 | --- | --- |
-| `single` (**default**) | One retrieval pass + one forced-tool-use Claude call (`src/lib/grading/single.ts`). This is the frozen control arm of the A/B experiment — its prompt, model, and tool schema are never modified. |
-| `agentic` | An orchestrated multi-agent pipeline (`src/lib/agents/orchestrator.ts`): Retrieval → Grading → Critique (revision loop, hard cap of 2 re-grades) → Feedback. |
+| `single` (**default**) | One retrieval pass + one Claude call (`src/lib/grading/single.ts`). The frozen control arm of the A/B experiment — never modified. |
+| `agentic` | Multi-agent pipeline (`src/lib/agents/orchestrator.ts`): Retrieval → Grading → Critique (revision loop, max 2 re-grades) → Feedback. |
 
-`single` is the current default because the eval numbers do not yet justify switching: the agentic pipeline improves mean total-score error (8.9% vs 10.6% of max) and per-criterion exact match (32.0% vs 30.6%), but it is *less* consistent across repeated runs (std-dev 2.02 vs 1.64 points), ~3× slower, and uses ~6.6× the input tokens. See the numbers below.
+`single` is the default: the agentic pipeline slightly improves mean error and exact-match agreement, but is less consistent, ~3× slower, and ~6.6× more expensive in input tokens (see the numbers below).
 
 ### Multi-agent pipeline
 
-Each agent is an async function `(state: GradingState) => Partial<GradingState>`; the orchestrator merges the patches and wraps each agent in its own Langfuse span.
+Each agent is an async function `(state: GradingState) => Partial<GradingState>`; the orchestrator merges the patches.
 
-1. **Retrieval Agent** — builds per-criterion context bundles. Has its own independent A/B flag `RETRIEVAL_MODE=shared|per_criterion` (`shared` default replicates the control's single combined query; `per_criterion` runs one query per rubric criterion, top 3 chunks each).
+1. **Retrieval Agent** — builds context bundles; independent A/B flag `RETRIEVAL_MODE=shared|per_criterion` (one rubric-wide query vs one per criterion).
 2. **Grading Agent** — drafts per-criterion scores with cited evidence chunk IDs.
-3. **Critique Agent** — reviews the draft, verdict `accept`/`revise`. On `revise` the orchestrator re-runs Grading (prompt embeds the prior draft + critique notes), up to 2 revisions; if the cap is exhausted with the verdict still `revise`, the grade is persisted with `needs_review = true` so instructors see low-confidence grades first.
-4. **Feedback Agent** — rewrites the internal grading summary into student-facing markdown.
+3. **Critique Agent** — verdict `accept`/`revise`; on `revise` the orchestrator re-runs Grading with the critique notes, up to twice. If still unresolved, the grade is flagged `needs_review`.
+4. **Feedback Agent** — rewrites the grading summary into student-facing markdown.
 
-All structured LLM calls go through a shared `callStructured()` helper (`src/lib/agents/llm.ts`): forced tool use, `input_schema` derived from Zod schemas, results validated with `schema.parse()`.
-
-Full per-agent documentation, including known code-vs-plan discrepancies, lives in [docs/agents/overview.md](docs/agents/overview.md).
+All structured LLM calls go through `callStructured()` (`src/lib/agents/llm.ts`): forced tool use, Zod-derived `input_schema`, `schema.parse()` on the result. Full per-agent docs: [docs/agents/overview.md](docs/agents/overview.md).
 
 ### Observability
 
-One Langfuse trace per grading run, one span per agent, one generation observation per LLM call (model, full prompt, token usage including cache reads/writes, stop reason). Tracing is a no-op unless `LANGFUSE_PUBLIC_KEY`/`LANGFUSE_SECRET_KEY` are set.
+One Langfuse trace per run, one span per agent, one generation per LLM call (prompt, token usage, stop reason). No-op unless `LANGFUSE_PUBLIC_KEY`/`LANGFUSE_SECRET_KEY` are set.
 
 ---
 
